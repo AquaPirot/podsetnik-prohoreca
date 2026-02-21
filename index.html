@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PROHORECA | Podsetnik</title>
+    <title>PROHORECA | Pro</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0e0e0f">
@@ -23,6 +23,8 @@
             --muted: #888890;
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --safe-top: env(safe-area-inset-top, 0px);
+            --green: #2ecc71;
+            --red: #e74c3c;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -30,7 +32,7 @@
             background-color: var(--bg);
             color: var(--text);
             font-family: 'IBM Plex Sans', sans-serif;
-            overflow-x: hidden;
+            overflow: hidden;
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -48,134 +50,118 @@
         }
 
         .logo { font-size: 22px; color: var(--accent); }
-        .global-badge { background: var(--accent); color: #000; padding: 2px 8px; border-radius: 10px; font-weight: bold; font-size: 12px; }
+        .header-btns { display: flex; gap: 15px; align-items: center; }
 
-        main { flex: 1; overflow-y: auto; padding: 15px 15px 120px; }
+        main { flex: 1; overflow-y: auto; padding: 15px 15px 120px; position: relative; }
 
-        .bottom-nav {
-            position: fixed;
-            bottom: 0; width: 100%; max-width: 500px;
-            left: 50%; transform: translateX(-50%);
-            background: var(--surface); border-top: 1px solid var(--border);
-            display: flex; padding: 10px 0 calc(10px + var(--safe-bottom));
-            z-index: 200;
+        /* --- TASK CARD & SWIPE --- */
+        .task-container {
+            position: relative;
+            margin-bottom: 12px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: var(--card);
+            touch-action: pan-y;
         }
 
+        .swipe-action {
+            position: absolute;
+            top: 0; bottom: 0; width: 100%;
+            display: flex; align-items: center;
+            padding: 0 25px; font-weight: bold; font-size: 14px;
+            color: white; z-index: 1;
+        }
+        .swipe-done { background: var(--green); justify-content: flex-start; }
+        .swipe-delete { background: var(--red); justify-content: flex-end; }
+
+        .task-card {
+            background: var(--card);
+            padding: 16px;
+            border-left: 6px solid #555;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.2s ease-out;
+            will-change: transform;
+        }
+
+        .task-info { flex: 1; padding-right: 10px; }
+        .task-desc { font-size: 16px; font-weight: 500; margin-bottom: 4px; line-height: 1.3; }
+        .task-meta { font-size: 11px; color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+        /* --- CONTACT BUTTONS --- */
+        .contact-btns { display: flex; gap: 10px; margin-left: 10px; align-items: center; }
+        .c-btn {
+            width: 38px; height: 38px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--surface); border: 1px solid var(--border);
+            text-decoration: none; font-size: 18px;
+        }
+        .c-wa { color: #25D366; }
+        .c-tel { color: #3498db; }
+
+        /* --- CHECKBOX --- */
+        .checkbox-container { width: 30px; height: 30px; flex-shrink: 0; margin-left: 5px; }
+        input[type="checkbox"] {
+            all: unset !important; width: 26px !important; height: 26px !important;
+            background-color: #2a2a2e !important; border: 2px solid var(--border) !important;
+            border-radius: 8px !important; position: relative !important; display: block !important;
+        }
+        input[type="checkbox"]:checked { background-color: var(--accent) !important; border-color: var(--accent) !important; }
+        input[type="checkbox"]:checked::after { content: '✓' !important; position: absolute !important; color: black !important; font-size: 18px; font-weight: bold; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+
+        /* --- NAVIGATION --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; max-width: 500px; left: 50%; transform: translateX(-50%);
+            background: var(--surface); border-top: 1px solid var(--border);
+            display: flex; padding: 10px 0 calc(10px + var(--safe-bottom)); z-index: 200;
+        }
         .nav-item { flex: 1; text-align: center; color: var(--muted); font-size: 10px; font-weight: 600; cursor: pointer; }
         .nav-item.active { color: var(--accent); }
         .nav-icon { font-size: 22px; display: block; margin-bottom: 2px; }
 
         .fab {
-            position: fixed;
-            bottom: calc(85px + var(--safe-bottom));
-            right: 20px; width: 60px; height: 60px;
-            background: var(--accent); border-radius: 20px;
+            position: fixed; bottom: calc(85px + var(--safe-bottom)); right: 20px;
+            width: 60px; height: 60px; background: var(--accent); border-radius: 20px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 32px; color: #000; border: none; z-index: 150;
+            font-size: 32px; color: #000; border: none; z-index: 150; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
-        /* --- TASK CARD --- */
-        .task-card {
-            background: var(--card);
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border-left: 6px solid #555;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        /* --- MODAL --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; z-index: 1000; }
+        .modal-overlay.open { display: flex; }
+        .modal { background: var(--surface); width: 100%; max-width: 500px; margin: 0 auto; border-radius: 30px 30px 0 0; padding: 30px 25px calc(35px + var(--safe-bottom)); }
+        
+        .form-row-phone { display: flex; gap: 8px; margin-bottom: 15px; }
+        input:not([type="checkbox"]), select, textarea { width: 100%; background: var(--card); border: 1px solid var(--border); color: white; padding: 14px; border-radius: 12px; font-size: 16px; font-family: inherit; }
+        .btn-contact-picker { background: var(--border); color: white; border: none; padding: 0 15px; border-radius: 12px; font-size: 20px; cursor: pointer; margin-bottom: 15px; }
 
-        .task-info { flex: 1; padding-right: 12px; }
-        .task-desc { font-size: 16px; font-weight: 500; margin-bottom: 4px; line-height: 1.3; }
-        .task-meta { font-size: 11px; color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .btn-save { background: var(--accent); color: black; width: 100%; padding: 16px; border: none; border-radius: 14px; font-weight: bold; font-size: 17px; cursor: pointer; }
 
-        /* --- STROGO DEFINISAN CHECKBOX --- */
-        .checkbox-container {
-            width: 30px !important;
-            height: 30px !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        input[type="checkbox"] {
-            all: unset !important;
-            box-sizing: border-box !important;
-            width: 28px !important;
-            height: 28px !important;
-            min-width: 28px !important;
-            min-height: 28px !important;
-            max-width: 28px !important;
-            max-height: 28px !important;
-            background-color: #2a2a2e !important;
-            border: 2px solid var(--border) !important;
-            border-radius: 8px !important;
-            cursor: pointer !important;
-            position: relative !important;
-            display: inline-block !important;
-        }
-
-        input[type="checkbox"]:checked {
-            background-color: var(--accent) !important;
-            border-color: var(--accent) !important;
-        }
-
-        input[type="checkbox"]:checked::after {
-            content: '✓' !important;
-            position: absolute !important;
-            color: black !important;
-            font-size: 18px !important;
-            font-weight: bold !important;
-            left: 50% !important;
-            top: 50% !important;
-            transform: translate(-50%, -50%) !important;
-        }
-
-        /* --- FORM INPUTS --- */
-        input:not([type="checkbox"]), select, textarea {
-            width: 100%; background: var(--card); border: 1px solid var(--border);
-            color: white; padding: 14px; border-radius: 12px; font-size: 16px;
-        }
-
-        /* --- GRID --- */
+        /* --- UTILS --- */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         .cat-card { background: var(--card); border: 1px solid var(--border); padding: 20px 5px; border-radius: 18px; text-align: center; position: relative; }
         .cat-card i { font-size: 28px; display: block; margin-bottom: 8px; }
         .cat-name { font-size: 10px; font-weight: bold; text-transform: uppercase; color: var(--muted); }
-        .cat-badge { position: absolute; top: -6px; right: -6px; background: var(--accent); color: #000; font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 800; border: 2px solid var(--bg); }
-
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-            display: none; align-items: flex-end; z-index: 1000;
-        }
-        .modal-overlay.open { display: flex; }
-        .modal {
-            background: var(--surface); width: 100%; max-width: 500px;
-            margin: 0 auto; border-radius: 30px 30px 0 0;
-            padding: 30px 25px calc(35px + var(--safe-bottom));
-        }
-
-        .btn-save { background: var(--accent); color: black; width: 100%; padding: 16px; border: none; border-radius: 14px; font-weight: bold; font-size: 17px; margin-top: 10px; }
-        .btn-cancel { color: var(--muted); text-align: center; display: block; margin-top: 20px; font-size: 14px; text-decoration: none; }
-        
-        .filters { display: flex; gap: 10px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; scrollbar-width: none; }
-        .filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 18px; border-radius: 20px; font-size: 13px; white-space: nowrap; }
-        .filter-btn.active { background: var(--accent); color: black; border-color: var(--accent); font-weight: bold; }
-
+        .cat-badge { position: absolute; top: -6px; right: -6px; background: var(--accent); color: #000; font-size: 10px; padding: 2px 7px; border-radius: 10px; border: 2px solid var(--bg); }
         .section-title { font-size: 14px; color: var(--accent); margin: 25px 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
-        
         .date-badge { padding: 3px 7px; border-radius: 5px; font-weight: 600; font-size: 10px; background: var(--border); }
         .overdue { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
         .today { background: rgba(245, 166, 35, 0.2); color: #f5a623; border: 1px solid #f5a623; }
+        .filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 18px; border-radius: 20px; font-size: 13px; margin-right: 8px; white-space: nowrap; cursor: pointer; }
+        .filter-btn.active { background: var(--accent); color: black; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo bebas">PROHORECA <span id="header-title" style="color:white; margin-left:10px;">TIMELINE</span></div>
-        <div class="global-badge" id="total-count">0</div>
+        <div class="header-btns">
+            <div class="global-badge" id="total-count" style="background: var(--accent); color: #000; padding: 2px 8px; border-radius: 10px; font-weight: bold; font-size: 12px;">0</div>
+            <span onclick="app.showSettings()" style="font-size: 22px; cursor: pointer; padding: 5px;">⚙️</span>
+        </div>
     </header>
 
     <main id="app-shell"></main>
@@ -194,34 +180,39 @@
 
     <button class="fab" onclick="ui.openModal()">+</button>
 
+    <!-- MODAL ZADATAK -->
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal">
             <h2 class="bebas" id="modal-heading" style="margin-bottom:20px; color:var(--accent);">Zadatak</h2>
             <input type="hidden" id="task-id">
-            <div class="form-group">
-                <label>Opis</label>
-                <input type="text" id="task-desc" placeholder="Šta treba uraditi?">
+            <input type="text" id="task-desc" placeholder="Opis zadatka...">
+            
+            <div class="form-row-phone">
+                <input type="tel" id="task-phone" placeholder="Broj telefona" style="margin-bottom:0">
+                <button class="btn-contact-picker" onclick="app.pickContact()" title="Izaberi iz imenika">👤</button>
             </div>
-            <div class="form-group">
-                <label>Kategorija</label>
-                <select id="task-cat"></select>
-            </div>
+
+            <select id="task-cat" style="margin-bottom:15px;"></select>
             <div style="display:flex; gap:12px;">
-                <div class="form-group" style="flex:1">
-                    <label>Rok</label>
-                    <input type="date" id="task-date">
-                </div>
-                <div class="form-group" style="flex:1">
-                    <label>Prioritet</label>
-                    <select id="task-priority">
-                        <option value="normal">Normalno</option>
-                        <option value="hitno">🚨 HITNO</option>
-                    </select>
-                </div>
+                <input type="date" id="task-date" style="flex:1; margin-bottom:15px;">
+                <select id="task-priority" style="flex:1; margin-bottom:15px;">
+                    <option value="normal">Normalno</option>
+                    <option value="hitno">🚨 HITNO</option>
+                </select>
             </div>
             <button class="btn-save" onclick="app.saveTask()">SAČUVAJ</button>
-            <a href="#" class="btn-cancel" onclick="ui.closeModal()">Odustani</a>
-            <button id="del-btn" style="display:none; background:none; border:none; color:#e74c3c; width:100%; margin-top:25px; font-weight:600;" onclick="app.deleteTask()">Obriši zadatak</button>
+            <button onclick="ui.closeModal()" style="background:none; border:none; color:var(--muted); width:100%; margin-top:15px; cursor:pointer;">Odustani</button>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div class="modal-overlay" id="settings-overlay">
+        <div class="modal">
+            <h2 class="bebas" style="margin-bottom:20px; color:var(--accent);">Podešavanja & Backup</h2>
+            <button class="btn-save" onclick="app.exportData()" style="background: #3498db; margin-bottom: 10px;">📦 IZVEZI PODATKE</button>
+            <button class="btn-save" onclick="document.getElementById('import-file').click()" style="background: #2ecc71;">📥 UČITAJ PODATKE</button>
+            <input type="file" id="import-file" style="display:none" onchange="app.importData(event)">
+            <button onclick="document.getElementById('settings-overlay').classList.remove('open')" style="background:none; border:none; color:var(--muted); width:100%; margin-top:20px; cursor:pointer;">Zatvori</button>
         </div>
     </div>
 
@@ -232,12 +223,10 @@
             obilazak: { n: 'Obilazak', i: '🚗', c: '#2ecc71' },
             aqua: { n: 'Aqua', i: '💧', c: '#00cec9' },
             pv: { n: 'PV', i: '☀️', c: '#fdcb6e' },
-            proizvodnja: { n: 'Proizvodnja', i: '⚙️', c: '#95a5a6' },
             finansije: { n: 'Finansije', i: '💰', c: '#f1c40f' },
             privatno: { n: 'Privatno', i: '🏠', c: '#e84393' },
             dobavljaci: { n: 'Dobavljači', i: '📦', c: '#9b59b6' },
             vozila: { n: 'Vozni park', i: '🚚', c: '#e74c3c' },
-            marketing: { n: 'Marketing', i: '📢', c: '#1abc9c' },
             opsti: { n: 'Opšte', i: '📝', c: '#7f8c8d' }
         };
 
@@ -248,20 +237,42 @@
 
         const app = {
             setPage(page, cat = null) {
-                currentPage = page;
-                currentCat = cat;
+                currentPage = page; currentCat = cat;
                 document.querySelectorAll('.nav-item').forEach((el, i) => {
-                    el.classList.toggle('active', (page === 'timeline' && i === 0) || ((page === 'categories' || page === 'category') && i === 1) || (page === 'archive' && i === 2));
+                    el.classList.toggle('active', (page==='timeline' && i===0) || (['categories','category'].includes(page) && i===1) || (page==='archive' && i===2));
                 });
                 this.render();
             },
+
+            async pickContact() {
+                if (!('contacts' in navigator && 'select' in navigator.contacts)) {
+                    alert('Vaš telefon/browser ne podržava direktno biranje kontakata. Molimo unesite broj ručno.');
+                    return;
+                }
+                try {
+                    const props = ['name', 'tel'];
+                    const contacts = await navigator.contacts.select(props, { multiple: false });
+                    if (contacts.length) {
+                        const contact = contacts[0];
+                        if (contact.tel && contact.tel.length > 0) {
+                            document.getElementById('task-phone').value = contact.tel[0];
+                            // Ako je opis prazan, stavi ime kontakta
+                            if (!document.getElementById('task-desc').value.trim()) {
+                                document.getElementById('task-desc').value = contact.name[0];
+                            }
+                        }
+                    }
+                } catch (e) { console.log('Biranje kontakta otkazano.'); }
+            },
+
             saveTask() {
                 const desc = document.getElementById('task-desc').value.trim();
+                const phone = document.getElementById('task-phone').value.trim();
                 if (!desc) return;
                 const id = document.getElementById('task-id').value;
                 const task = {
                     id: id || Date.now().toString(),
-                    desc,
+                    desc, phone,
                     cat: document.getElementById('task-cat').value,
                     date: document.getElementById('task-date').value,
                     priority: document.getElementById('task-priority').value,
@@ -271,63 +282,34 @@
                     const idx = tasks.findIndex(t => t.id === id);
                     task.done = tasks[idx].done;
                     tasks[idx] = task;
-                } else {
-                    tasks.push(task);
-                }
-                this.sync();
-                ui.closeModal();
+                } else { tasks.push(task); }
+                this.sync(); ui.closeModal();
             },
-            toggleTask(id, e) {
-                e.stopPropagation();
-                const t = tasks.find(x => x.id === id);
-                t.done = !t.done;
-                this.sync();
-            },
-            deleteTask() {
-                if (!confirm('Obrisati zadatak?')) return;
-                const id = document.getElementById('task-id').value;
-                tasks = tasks.filter(t => t.id !== id);
-                this.sync();
-                ui.closeModal();
-            },
-            sync() {
-                localStorage.setItem('pro_tasks', JSON.stringify(tasks));
-                this.render();
-            },
+
+            sync() { localStorage.setItem('pro_tasks', JSON.stringify(tasks)); this.render(); },
+            
             render() {
                 const shell = document.getElementById('app-shell');
-                const title = document.getElementById('header-title');
-                const count = document.getElementById('total-count');
-                count.innerText = tasks.filter(t => !t.done).length;
+                document.getElementById('total-count').innerText = tasks.filter(t => !t.done).length;
                 shell.innerHTML = '';
-
-                if (currentPage === 'timeline') {
-                    title.innerText = 'TIMELINE';
-                    this.renderTimeline(shell);
-                } else if (currentPage === 'categories') {
-                    title.innerText = 'KATEGORIJE';
-                    this.renderGrid(shell);
-                } else if (currentPage === 'category') {
-                    title.innerText = CATS[currentCat].n.toUpperCase();
-                    this.renderCategory(shell);
-                } else if (currentPage === 'archive') {
-                    title.innerText = 'ARHIVA';
-                    this.renderArchive(shell);
-                }
+                if (currentPage === 'timeline') this.renderTimeline(shell);
+                else if (currentPage === 'categories') this.renderGrid(shell);
+                else if (currentPage === 'category') this.renderCategory(shell);
+                else if (currentPage === 'archive') this.renderArchive(shell);
+                this.initSwipe();
             },
+
             renderTimeline(el) {
                 const today = new Date().toISOString().split('T')[0];
                 let active = tasks.filter(t => !t.done && t.date);
                 if(timelineFilter === 'danas') active = active.filter(t => t.date === today);
                 if(timelineFilter === 'hitno') active = active.filter(t => t.priority === 'hitno');
 
-                el.innerHTML = `
-                    <div class="filters">
-                        <div class="filter-btn ${timelineFilter==='sve'?'active':''}" onclick="app.setFilter('sve')">Sve</div>
-                        <div class="filter-btn ${timelineFilter==='danas'?'active':''}" onclick="app.setFilter('danas')">Danas</div>
-                        <div class="filter-btn ${timelineFilter==='hitno'?'active':''}" onclick="app.setFilter('hitno')">🚨 Hitno</div>
-                    </div>
-                `;
+                el.innerHTML = `<div style="display:flex; overflow-x:auto; margin-bottom:15px; padding-bottom:5px; scrollbar-width:none;">
+                    <div class="filter-btn ${timelineFilter==='sve'?'active':''}" onclick="app.setFilter('sve')">Sve</div>
+                    <div class="filter-btn ${timelineFilter==='danas'?'active':''}" onclick="app.setFilter('danas')">Danas</div>
+                    <div class="filter-btn ${timelineFilter==='hitno'?'active':''}" onclick="app.setFilter('hitno')">🚨 Hitno</div>
+                </div>`;
 
                 const overdue = active.filter(t => t.date < today).sort((a,b) => a.date > b.date ? 1 : -1);
                 const isToday = active.filter(t => t.date === today);
@@ -336,8 +318,8 @@
                 if (overdue.length) el.innerHTML += `<div class="section-title bebas">ISTEKLO</div>` + overdue.map(t => this.taskHTML(t)).join('');
                 if (isToday.length) el.innerHTML += `<div class="section-title bebas">DANAS</div>` + isToday.map(t => this.taskHTML(t)).join('');
                 if (upcoming.length) el.innerHTML += `<div class="section-title bebas">USKORO</div>` + upcoming.map(t => this.taskHTML(t)).join('');
-                if (!active.length) el.innerHTML += `<div style="text-align:center; padding:40px; color:var(--muted)">Nema zadataka.</div>`;
             },
+
             renderGrid(el) {
                 let html = '<div class="grid">';
                 for (let k in CATS) {
@@ -346,38 +328,116 @@
                 }
                 el.innerHTML = html + '</div>';
             },
+
             renderCategory(el) {
                 const catTasks = tasks.filter(t => t.cat === currentCat && !t.done);
                 el.innerHTML = catTasks.length ? catTasks.map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:40px; color:var(--muted)">Prazno.</div>';
             },
+
             renderArchive(el) {
                 const done = tasks.filter(t => t.done);
                 el.innerHTML = done.length ? done.slice(-30).reverse().map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:40px; color:var(--muted)">Prazno.</div>';
             },
-            setFilter(f) { timelineFilter = f; this.render(); },
-            getDayName(dateStr) {
-                const days = ['Ned', 'Pon', 'Uto', 'Sre', 'Čet', 'Pet', 'Sub'];
-                const d = new Date(dateStr);
-                return days[d.getDay()];
-            },
+
             taskHTML(t) {
                 const today = new Date().toISOString().split('T')[0];
                 const ds = t.date < today ? 'overdue' : (t.date === today ? 'today' : '');
-                const dayName = t.date ? `(${this.getDayName(t.date)})` : '';
+                const days = ['Ned', 'Pon', 'Uto', 'Sre', 'Čet', 'Pet', 'Sub'];
+                const dayName = t.date ? `(${days[new Date(t.date).getDay()]})` : '';
+                
+                // Čišćenje broja za WA
+                let cleanPhone = t.phone ? t.phone.replace(/[^0-9+]/g, '') : '';
+                if (cleanPhone.startsWith('0') && !cleanPhone.startsWith('00')) {
+                    cleanPhone = '381' + cleanPhone.substring(1);
+                }
+                const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent('Podsetnik: ' + t.desc)}`;
+
                 return `
-                    <div class="task-card" style="border-left-color:${CATS[t.cat].c}; opacity:${t.done?0.5:1}" onclick="ui.openModal('${t.id}')">
-                        <div class="task-info">
-                            <div class="task-desc" style="${t.done?'text-decoration:line-through':''}">${t.desc}</div>
-                            <div class="task-meta">
-                                <span style="color:${CATS[t.cat].c}; font-weight:600;">${CATS[t.cat].i} ${CATS[t.cat].n}</span>
-                                ${t.date ? `<span class="date-badge ${ds}">${t.date.split('-')[2]}.${t.date.split('-')[1]}. ${dayName}</span>` : ''}
-                                ${t.priority === 'hitno' ? `<span style="color:#e74c3c; font-weight:bold;">🚨 HITNO</span>` : ''}
+                    <div class="task-container" data-id="${t.id}">
+                        <div class="swipe-action swipe-done">GOTOVO ✓</div>
+                        <div class="swipe-action swipe-delete">OBRIŠI ✕</div>
+                        <div class="task-card" style="border-left-color:${CATS[t.cat].c}; opacity:${t.done?0.5:1}" onclick="ui.openModal('${t.id}')">
+                            <div class="task-info">
+                                <div class="task-desc" style="${t.done?'text-decoration:line-through':''}">${t.desc}</div>
+                                <div class="task-meta">
+                                    <span style="color:${CATS[t.cat].c}; font-weight:600;">${CATS[t.cat].i} ${CATS[t.cat].n}</span>
+                                    ${t.date ? `<span class="date-badge ${ds}">${t.date.split('-')[2]}.${t.date.split('-')[1]}. ${dayName}</span>` : ''}
+                                    ${t.priority === 'hitno' ? `<span style="color:#e74c3c; font-weight:bold;">🚨 HITNO</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="contact-btns">
+                                ${t.phone ? `
+                                    <a href="tel:${t.phone}" class="c-btn c-tel" onclick="event.stopPropagation()">📞</a>
+                                    <a href="${waLink}" target="_blank" class="c-btn c-wa" onclick="event.stopPropagation()">💬</a>
+                                ` : ''}
+                                <div class="checkbox-container">
+                                    <input type="checkbox" ${t.done?'checked':''} onclick="event.stopPropagation(); app.toggleTask('${t.id}')">
+                                </div>
                             </div>
                         </div>
-                        <div class="checkbox-container">
-                            <input type="checkbox" ${t.done?'checked':''} onclick="app.toggleTask('${t.id}', event)">
-                        </div>
                     </div>`;
+            },
+
+            setFilter(f) { timelineFilter = f; this.render(); },
+            toggleTask(id) {
+                const t = tasks.find(x => x.id === id);
+                if(t) { t.done = !t.done; this.sync(); }
+            },
+            deleteTask(id) {
+                tasks = tasks.filter(t => t.id !== id);
+                this.sync();
+            },
+            showSettings() { document.getElementById('settings-overlay').classList.add('open'); },
+            
+            exportData() {
+                const dataStr = JSON.stringify(tasks);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                const exportFileDefaultName = 'pro_backup_' + new Date().toISOString().split('T')[0] + '.json';
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+            },
+
+            importData(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedTasks = JSON.parse(e.target.result);
+                        if(Array.isArray(importedTasks)) {
+                            if(confirm('Učitati podatke? Ovo će obrisati trenutne zadatke.')) {
+                                tasks = importedTasks;
+                                this.sync();
+                                document.getElementById('settings-overlay').classList.remove('open');
+                            }
+                        }
+                    } catch(err) { alert('Greška pri učitavanju.'); }
+                };
+                reader.readAsText(file);
+            },
+
+            initSwipe() {
+                document.querySelectorAll('.task-container').forEach(container => {
+                    const card = container.querySelector('.task-card');
+                    let startX = 0, currentX = 0;
+                    container.addEventListener('touchstart', e => { startX = e.touches[0].clientX; card.style.transition = 'none'; }, {passive: true});
+                    container.addEventListener('touchmove', e => {
+                        currentX = e.touches[0].clientX - startX;
+                        if (currentX > 0) { container.querySelector('.swipe-done').style.opacity = 1; container.querySelector('.swipe-delete').style.opacity = 0; } 
+                        else { container.querySelector('.swipe-done').style.opacity = 0; container.querySelector('.swipe-delete').style.opacity = 1; }
+                        card.style.transform = `translateX(${currentX}px)`;
+                    }, {passive: true});
+                    container.addEventListener('touchend', () => {
+                        card.style.transition = 'transform 0.3s ease';
+                        const id = container.getAttribute('data-id');
+                        if (currentX > 130) app.toggleTask(id);
+                        else if (currentX < -130) { if(confirm('Obriši?')) app.deleteTask(id); }
+                        card.style.transform = `translateX(0px)`;
+                        currentX = 0;
+                    });
+                });
             }
         };
 
@@ -389,18 +449,18 @@
                     const t = tasks.find(x => x.id === id);
                     document.getElementById('task-id').value = t.id;
                     document.getElementById('task-desc').value = t.desc;
+                    document.getElementById('task-phone').value = t.phone || '';
                     document.getElementById('task-cat').value = t.cat;
                     document.getElementById('task-date').value = t.date;
                     document.getElementById('task-priority').value = t.priority;
                     document.getElementById('modal-heading').innerText = 'Izmeni';
-                    document.getElementById('del-btn').style.display = 'block';
                 } else {
                     document.getElementById('task-id').value = '';
                     document.getElementById('task-desc').value = '';
+                    document.getElementById('task-phone').value = '';
                     document.getElementById('task-date').value = '';
                     document.getElementById('task-priority').value = 'normal';
                     document.getElementById('modal-heading').innerText = 'Novi zadatak';
-                    document.getElementById('del-btn').style.display = 'none';
                 }
                 document.getElementById('modal-overlay').classList.add('open');
             },
