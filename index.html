@@ -88,7 +88,7 @@
 
         .task-info { flex: 1; padding-right: 12px; }
         .task-desc { font-size: 16px; font-weight: 500; margin-bottom: 4px; line-height: 1.3; }
-        .task-meta { font-size: 11px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+        .task-meta { font-size: 11px; color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
         /* --- STROGO DEFINISAN CHECKBOX --- */
         .checkbox-container {
@@ -101,7 +101,7 @@
         }
 
         input[type="checkbox"] {
-            all: unset !important; /* Poništava sve prethodne stilove */
+            all: unset !important;
             box-sizing: border-box !important;
             width: 28px !important;
             height: 28px !important;
@@ -230,9 +230,12 @@
             upiti: { n: 'Upiti & Ponude', i: '📧', c: '#3498db' },
             projekti: { n: 'Projekti & Montaža', i: '🏗️', c: '#e67e22' },
             obilazak: { n: 'Obilazak', i: '🚗', c: '#2ecc71' },
-            dobavljaci: { n: 'Dobavljači', i: '📦', c: '#9b59b6' },
+            aqua: { n: 'Aqua', i: '💧', c: '#00cec9' },
+            pv: { n: 'PV', i: '☀️', c: '#fdcb6e' },
             proizvodnja: { n: 'Proizvodnja', i: '⚙️', c: '#95a5a6' },
             finansije: { n: 'Finansije', i: '💰', c: '#f1c40f' },
+            privatno: { n: 'Privatno', i: '🏠', c: '#e84393' },
+            dobavljaci: { n: 'Dobavljači', i: '📦', c: '#9b59b6' },
             vozila: { n: 'Vozni park', i: '🚚', c: '#e74c3c' },
             marketing: { n: 'Marketing', i: '📢', c: '#1abc9c' },
             opsti: { n: 'Opšte', i: '📝', c: '#7f8c8d' }
@@ -326,7 +329,7 @@
                     </div>
                 `;
 
-                const overdue = active.filter(t => t.date < today);
+                const overdue = active.filter(t => t.date < today).sort((a,b) => a.date > b.date ? 1 : -1);
                 const isToday = active.filter(t => t.date === today);
                 const upcoming = active.filter(t => t.date > today).sort((a,b) => a.date > b.date ? 1 : -1);
 
@@ -352,16 +355,22 @@
                 el.innerHTML = done.length ? done.slice(-30).reverse().map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:40px; color:var(--muted)">Prazno.</div>';
             },
             setFilter(f) { timelineFilter = f; this.render(); },
+            getDayName(dateStr) {
+                const days = ['Ned', 'Pon', 'Uto', 'Sre', 'Čet', 'Pet', 'Sub'];
+                const d = new Date(dateStr);
+                return days[d.getDay()];
+            },
             taskHTML(t) {
                 const today = new Date().toISOString().split('T')[0];
                 const ds = t.date < today ? 'overdue' : (t.date === today ? 'today' : '');
+                const dayName = t.date ? `(${this.getDayName(t.date)})` : '';
                 return `
                     <div class="task-card" style="border-left-color:${CATS[t.cat].c}; opacity:${t.done?0.5:1}" onclick="ui.openModal('${t.id}')">
                         <div class="task-info">
                             <div class="task-desc" style="${t.done?'text-decoration:line-through':''}">${t.desc}</div>
                             <div class="task-meta">
-                                <span>${CATS[t.cat].i} ${CATS[t.cat].n}</span>
-                                ${t.date ? `<span class="date-badge ${ds}">${t.date.split('-')[2]}.${t.date.split('-')[1]}.</span>` : ''}
+                                <span style="color:${CATS[t.cat].c}; font-weight:600;">${CATS[t.cat].i} ${CATS[t.cat].n}</span>
+                                ${t.date ? `<span class="date-badge ${ds}">${t.date.split('-')[2]}.${t.date.split('-')[1]}. ${dayName}</span>` : ''}
                                 ${t.priority === 'hitno' ? `<span style="color:#e74c3c; font-weight:bold;">🚨 HITNO</span>` : ''}
                             </div>
                         </div>
