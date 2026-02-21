@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PROHORECA | Pro</title>
+    <title>PROHORECA | Ultra</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0e0e0f">
@@ -14,22 +14,24 @@
     
     <style>
         :root {
-            --bg: #0e0e0f;
-            --surface: #161618;
-            --card: #1e1e21;
-            --border: #2a2a2e;
+            --bg: #09090b;
+            --surface: rgba(22, 22, 24, 0.8);
+            --card: rgba(30, 30, 33, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
             --accent: #f5a623;
-            --text: #e8e8ea;
-            --muted: #888890;
+            --text: #f4f4f5;
+            --muted: #a1a1aa;
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --safe-top: env(safe-area-inset-top, 0px);
-            --green: #2ecc71;
-            --red: #e74c3c;
+            --green: #10b981;
+            --red: #ef4444;
+            --blue: #3b82f6;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            background-color: var(--bg);
+            background: radial-gradient(circle at top right, #1c1c1f, #09090b);
             color: var(--text);
             font-family: 'IBM Plex Sans', sans-serif;
             overflow: hidden;
@@ -38,37 +40,40 @@
             flex-direction: column;
         }
 
-        .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+        .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; }
 
+        /* --- HEADER --- */
         header {
-            padding: calc(20px + var(--safe-top)) 20px 10px;
+            padding: calc(20px + var(--safe-top)) 20px 15px;
             background: var(--surface);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 100;
         }
 
-        .logo { font-size: 22px; color: var(--accent); }
+        .logo { font-size: 24px; color: var(--accent); text-shadow: 0 0 15px rgba(245, 166, 35, 0.3); }
         .header-btns { display: flex; gap: 15px; align-items: center; }
 
-        main { flex: 1; overflow-y: auto; padding: 15px 15px 120px; position: relative; }
+        main { flex: 1; overflow-y: auto; padding: 15px 15px 130px; position: relative; scroll-behavior: smooth; }
 
-        /* --- TASK CARD & SWIPE --- */
+        /* --- TASK CONTAINER & MODERN CARDS --- */
         .task-container {
             position: relative;
-            margin-bottom: 12px;
-            border-radius: 14px;
+            margin-bottom: 15px;
+            border-radius: 16px;
             overflow: hidden;
-            background: var(--card);
-            touch-action: pan-y;
+            background: #000;
         }
 
         .swipe-action {
             position: absolute;
             top: 0; bottom: 0; width: 100%;
             display: flex; align-items: center;
-            padding: 0 25px; font-weight: bold; font-size: 14px;
+            padding: 0 25px; font-weight: 700; font-size: 13px;
             color: white; z-index: 1;
         }
         .swipe-done { background: var(--green); justify-content: flex-start; }
@@ -76,91 +81,106 @@
 
         .task-card {
             background: var(--card);
-            padding: 16px;
-            border-left: 6px solid #555;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-left: 5px solid #555;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: relative;
             z-index: 2;
-            transition: transform 0.2s ease-out;
-            will-change: transform;
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .task-info { flex: 1; padding-right: 10px; }
-        .task-desc { font-size: 16px; font-weight: 500; margin-bottom: 4px; line-height: 1.3; }
+        .task-desc { font-size: 16px; font-weight: 500; margin-bottom: 6px; line-height: 1.4; color: #fff; }
         .task-meta { font-size: 11px; color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
-        /* --- CONTACT BUTTONS --- */
-        .contact-btns { display: flex; gap: 10px; margin-left: 10px; align-items: center; }
+        /* --- CONTACT & UTILS --- */
+        .contact-btns { display: flex; gap: 10px; align-items: center; }
         .c-btn {
-            width: 38px; height: 38px; border-radius: 10px;
+            width: 40px; height: 40px; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            background: var(--surface); border: 1px solid var(--border);
-            text-decoration: none; font-size: 18px;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            text-decoration: none; font-size: 18px; transition: 0.2s;
         }
         .c-wa { color: #25D366; }
-        .c-tel { color: #3498db; }
+        .c-tel { color: #3b82f6; }
+        .c-restore { color: var(--accent); font-size: 20px; }
 
         /* --- CHECKBOX --- */
         .checkbox-container { width: 30px; height: 30px; flex-shrink: 0; margin-left: 5px; }
         input[type="checkbox"] {
             all: unset !important; width: 26px !important; height: 26px !important;
-            background-color: #2a2a2e !important; border: 2px solid var(--border) !important;
+            background-color: rgba(255,255,255,0.1) !important; border: 1px solid var(--border) !important;
             border-radius: 8px !important; position: relative !important; display: block !important;
         }
-        input[type="checkbox"]:checked { background-color: var(--accent) !important; border-color: var(--accent) !important; }
-        input[type="checkbox"]:checked::after { content: '✓' !important; position: absolute !important; color: black !important; font-size: 18px; font-weight: bold; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+        input[type="checkbox"]:checked { background-color: var(--green) !important; border-color: var(--green) !important; }
+        input[type="checkbox"]:checked::after { content: '✓' !important; position: absolute !important; color: #000; font-size: 18px; font-weight: bold; left: 50%; top: 50%; transform: translate(-50%, -50%); }
 
         /* --- NAVIGATION --- */
         .bottom-nav {
             position: fixed; bottom: 0; width: 100%; max-width: 500px; left: 50%; transform: translateX(-50%);
-            background: var(--surface); border-top: 1px solid var(--border);
-            display: flex; padding: 10px 0 calc(10px + var(--safe-bottom)); z-index: 200;
+            background: var(--surface); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            display: flex; padding: 12px 0 calc(12px + var(--safe-bottom)); z-index: 200;
         }
-        .nav-item { flex: 1; text-align: center; color: var(--muted); font-size: 10px; font-weight: 600; cursor: pointer; }
-        .nav-item.active { color: var(--accent); }
-        .nav-icon { font-size: 22px; display: block; margin-bottom: 2px; }
+        .nav-item { flex: 1; text-align: center; color: var(--muted); font-size: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: var(--accent); transform: translateY(-2px); }
+        .nav-icon { font-size: 24px; display: block; margin-bottom: 4px; }
 
         .fab {
-            position: fixed; bottom: calc(85px + var(--safe-bottom)); right: 20px;
-            width: 60px; height: 60px; background: var(--accent); border-radius: 20px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 32px; color: #000; border: none; z-index: 150; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            position: fixed; bottom: calc(90px + var(--safe-bottom)); right: 20px;
+            width: 64px; height: 64px; background: linear-gradient(135deg, var(--accent), #e67e22);
+            border-radius: 22px; display: flex; align-items: center; justify-content: center;
+            font-size: 35px; color: #000; border: none; z-index: 150; 
+            box-shadow: 0 10px 25px rgba(230, 126, 34, 0.4);
         }
 
-        /* --- MODAL --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; z-index: 1000; }
+        /* --- MODALS --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: none; align-items: flex-end; z-index: 1000; }
         .modal-overlay.open { display: flex; }
-        .modal { background: var(--surface); width: 100%; max-width: 500px; margin: 0 auto; border-radius: 30px 30px 0 0; padding: 30px 25px calc(35px + var(--safe-bottom)); }
-        
-        .form-row-phone { display: flex; gap: 8px; margin-bottom: 15px; }
-        input:not([type="checkbox"]), select, textarea { width: 100%; background: var(--card); border: 1px solid var(--border); color: white; padding: 14px; border-radius: 12px; font-size: 16px; font-family: inherit; }
-        .btn-contact-picker { background: var(--border); color: white; border: none; padding: 0 15px; border-radius: 12px; font-size: 20px; cursor: pointer; margin-bottom: 15px; }
+        .modal { 
+            background: #161618; width: 100%; max-width: 500px; margin: 0 auto; 
+            border-radius: 32px 32px 0 0; padding: 35px 25px calc(40px + var(--safe-bottom));
+            border-top: 1px solid var(--border);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+        }
+        input:not([type="checkbox"]), select, textarea { 
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
+            color: white; padding: 15px; border-radius: 14px; font-size: 16px; margin-bottom: 15px;
+        }
+        .btn-save { background: var(--accent); color: black; width: 100%; padding: 18px; border: none; border-radius: 16px; font-weight: 700; font-size: 17px; }
 
-        .btn-save { background: var(--accent); color: black; width: 100%; padding: 16px; border: none; border-radius: 14px; font-weight: bold; font-size: 17px; cursor: pointer; }
+        /* --- CATEGORIES GRID --- */
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .cat-card { 
+            background: var(--card); border: 1px solid var(--border); padding: 25px 5px; 
+            border-radius: 24px; text-align: center; position: relative; transition: 0.2s;
+        }
+        .cat-card:active { transform: scale(0.95); background: rgba(255,255,255,0.05); }
+        .cat-card i { font-size: 32px; display: block; margin-bottom: 10px; }
+        .cat-name { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); }
+        .cat-badge { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #000; font-size: 10px; padding: 3px 8px; border-radius: 12px; font-weight: 800; border: 3px solid #09090b; }
 
-        /* --- UTILS --- */
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .cat-card { background: var(--card); border: 1px solid var(--border); padding: 20px 5px; border-radius: 18px; text-align: center; position: relative; }
-        .cat-card i { font-size: 28px; display: block; margin-bottom: 8px; }
-        .cat-name { font-size: 10px; font-weight: bold; text-transform: uppercase; color: var(--muted); }
-        .cat-badge { position: absolute; top: -6px; right: -6px; background: var(--accent); color: #000; font-size: 10px; padding: 2px 7px; border-radius: 10px; border: 2px solid var(--bg); }
-        .section-title { font-size: 14px; color: var(--accent); margin: 25px 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
-        .date-badge { padding: 3px 7px; border-radius: 5px; font-weight: 600; font-size: 10px; background: var(--border); }
-        .overdue { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
-        .today { background: rgba(245, 166, 35, 0.2); color: #f5a623; border: 1px solid #f5a623; }
-        .filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 18px; border-radius: 20px; font-size: 13px; margin-right: 8px; white-space: nowrap; cursor: pointer; }
-        .filter-btn.active { background: var(--accent); color: black; }
+        .section-title { font-size: 13px; color: var(--accent); margin: 30px 0 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px; text-transform: uppercase; font-weight: 700; }
+        .date-badge { padding: 4px 8px; border-radius: 7px; font-weight: 600; font-size: 10px; background: rgba(255,255,255,0.1); }
+        .overdue { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .today { background: rgba(245, 166, 35, 0.15); color: #f5a623; border: 1px solid rgba(245, 166, 35, 0.3); }
+
+        .filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 10px 20px; border-radius: 25px; font-size: 13px; margin-right: 10px; white-space: nowrap; font-weight: 600; }
+        .filter-btn.active { background: var(--accent); color: black; box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3); }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo bebas">PROHORECA <span id="header-title" style="color:white; margin-left:10px;">TIMELINE</span></div>
+        <div class="logo bebas">PROHORECA <span id="header-title" style="color:#fff; opacity:0.6; margin-left:8px; font-size: 18px;">TIMELINE</span></div>
         <div class="header-btns">
-            <div class="global-badge" id="total-count" style="background: var(--accent); color: #000; padding: 2px 8px; border-radius: 10px; font-weight: bold; font-size: 12px;">0</div>
-            <span onclick="app.showSettings()" style="font-size: 22px; cursor: pointer; padding: 5px;">⚙️</span>
+            <div id="total-count" style="background: var(--accent); color: #000; padding: 2px 10px; border-radius: 20px; font-weight: 800; font-size: 12px;">0</div>
+            <span onclick="app.showSettings()" style="font-size: 24px; cursor: pointer;">⚙️</span>
         </div>
     </header>
 
@@ -183,36 +203,36 @@
     <!-- MODAL ZADATAK -->
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal">
-            <h2 class="bebas" id="modal-heading" style="margin-bottom:20px; color:var(--accent);">Zadatak</h2>
+            <h2 class="bebas" id="modal-heading" style="margin-bottom:25px; color:var(--accent);">ZADATAK</h2>
             <input type="hidden" id="task-id">
             <input type="text" id="task-desc" placeholder="Opis zadatka...">
             
-            <div class="form-row-phone">
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                 <input type="tel" id="task-phone" placeholder="Broj telefona" style="margin-bottom:0">
-                <button class="btn-contact-picker" onclick="app.pickContact()" title="Izaberi iz imenika">👤</button>
+                <button onclick="app.pickContact()" style="background: var(--border); border:none; padding: 0 20px; border-radius: 14px; font-size: 22px;">👤</button>
             </div>
 
-            <select id="task-cat" style="margin-bottom:15px;"></select>
+            <select id="task-cat"></select>
             <div style="display:flex; gap:12px;">
-                <input type="date" id="task-date" style="flex:1; margin-bottom:15px;">
-                <select id="task-priority" style="flex:1; margin-bottom:15px;">
+                <input type="date" id="task-date" style="flex:1">
+                <select id="task-priority" style="flex:1">
                     <option value="normal">Normalno</option>
                     <option value="hitno">🚨 HITNO</option>
                 </select>
             </div>
-            <button class="btn-save" onclick="app.saveTask()">SAČUVAJ</button>
-            <button onclick="ui.closeModal()" style="background:none; border:none; color:var(--muted); width:100%; margin-top:15px; cursor:pointer;">Odustani</button>
+            <button class="btn-save" onclick="app.saveTask()">SAČUVAJ ZADATAK</button>
+            <button onclick="ui.closeModal()" style="background:none; border:none; color:var(--muted); width:100%; margin-top:20px; font-weight:600;">ODUSTANI</button>
         </div>
     </div>
 
     <!-- SETTINGS MODAL -->
     <div class="modal-overlay" id="settings-overlay">
         <div class="modal">
-            <h2 class="bebas" style="margin-bottom:20px; color:var(--accent);">Podešavanja & Backup</h2>
-            <button class="btn-save" onclick="app.exportData()" style="background: #3498db; margin-bottom: 10px;">📦 IZVEZI PODATKE</button>
-            <button class="btn-save" onclick="document.getElementById('import-file').click()" style="background: #2ecc71;">📥 UČITAJ PODATKE</button>
+            <h2 class="bebas" style="margin-bottom:20px; color:var(--accent);">PODEŠAVANJA</h2>
+            <button class="btn-save" onclick="app.exportData()" style="background: var(--blue); margin-bottom: 12px; color: #fff;">📦 BACKUP (IZVEZI)</button>
+            <button class="btn-save" onclick="document.getElementById('import-file').click()" style="background: var(--green); color: #fff;">📥 IMPORT (UČITAJ)</button>
             <input type="file" id="import-file" style="display:none" onchange="app.importData(event)">
-            <button onclick="document.getElementById('settings-overlay').classList.remove('open')" style="background:none; border:none; color:var(--muted); width:100%; margin-top:20px; cursor:pointer;">Zatvori</button>
+            <button onclick="document.getElementById('settings-overlay').classList.remove('open')" style="background:none; border:none; color:var(--muted); width:100%; margin-top:25px;">ZATVORI</button>
         </div>
     </div>
 
@@ -243,54 +263,40 @@
                 });
                 this.render();
             },
-
             async pickContact() {
-                if (!('contacts' in navigator && 'select' in navigator.contacts)) {
-                    alert('Vaš telefon/browser ne podržava direktno biranje kontakata. Molimo unesite broj ručno.');
-                    return;
-                }
+                if (!('contacts' in navigator)) return alert('Nije podržano.');
                 try {
-                    const props = ['name', 'tel'];
-                    const contacts = await navigator.contacts.select(props, { multiple: false });
-                    if (contacts.length) {
-                        const contact = contacts[0];
-                        if (contact.tel && contact.tel.length > 0) {
-                            document.getElementById('task-phone').value = contact.tel[0];
-                            // Ako je opis prazan, stavi ime kontakta
-                            if (!document.getElementById('task-desc').value.trim()) {
-                                document.getElementById('task-desc').value = contact.name[0];
-                            }
-                        }
+                    const contacts = await navigator.contacts.select(['name', 'tel'], { multiple: false });
+                    if (contacts.length && contacts[0].tel.length) {
+                        document.getElementById('task-phone').value = contacts[0].tel[0];
+                        if (!document.getElementById('task-desc').value) document.getElementById('task-desc').value = contacts[0].name[0];
                     }
-                } catch (e) { console.log('Biranje kontakta otkazano.'); }
+                } catch (e) {}
             },
-
             saveTask() {
                 const desc = document.getElementById('task-desc').value.trim();
-                const phone = document.getElementById('task-phone').value.trim();
                 if (!desc) return;
                 const id = document.getElementById('task-id').value;
                 const task = {
                     id: id || Date.now().toString(),
-                    desc, phone,
+                    desc, phone: document.getElementById('task-phone').value,
                     cat: document.getElementById('task-cat').value,
                     date: document.getElementById('task-date').value,
                     priority: document.getElementById('task-priority').value,
-                    done: false
+                    done: false, deleted: false
                 };
                 if (id) {
                     const idx = tasks.findIndex(t => t.id === id);
                     task.done = tasks[idx].done;
+                    task.deleted = tasks[idx].deleted;
                     tasks[idx] = task;
                 } else { tasks.push(task); }
                 this.sync(); ui.closeModal();
             },
-
             sync() { localStorage.setItem('pro_tasks', JSON.stringify(tasks)); this.render(); },
-            
             render() {
                 const shell = document.getElementById('app-shell');
-                document.getElementById('total-count').innerText = tasks.filter(t => !t.done).length;
+                document.getElementById('total-count').innerText = tasks.filter(t => !t.done && !t.deleted).length;
                 shell.innerHTML = '';
                 if (currentPage === 'timeline') this.renderTimeline(shell);
                 else if (currentPage === 'categories') this.renderGrid(shell);
@@ -298,17 +304,16 @@
                 else if (currentPage === 'archive') this.renderArchive(shell);
                 this.initSwipe();
             },
-
             renderTimeline(el) {
                 const today = new Date().toISOString().split('T')[0];
-                let active = tasks.filter(t => !t.done && t.date);
+                let active = tasks.filter(t => !t.done && t.date && !t.deleted);
                 if(timelineFilter === 'danas') active = active.filter(t => t.date === today);
                 if(timelineFilter === 'hitno') active = active.filter(t => t.priority === 'hitno');
 
-                el.innerHTML = `<div style="display:flex; overflow-x:auto; margin-bottom:15px; padding-bottom:5px; scrollbar-width:none;">
-                    <div class="filter-btn ${timelineFilter==='sve'?'active':''}" onclick="app.setFilter('sve')">Sve</div>
-                    <div class="filter-btn ${timelineFilter==='danas'?'active':''}" onclick="app.setFilter('danas')">Danas</div>
-                    <div class="filter-btn ${timelineFilter==='hitno'?'active':''}" onclick="app.setFilter('hitno')">🚨 Hitno</div>
+                el.innerHTML = `<div style="display:flex; overflow-x:auto; margin-bottom:20px; padding-bottom:5px; scrollbar-width:none;">
+                    <div class="filter-btn ${timelineFilter==='sve'?'active':''}" onclick="app.setFilter('sve')">SVE</div>
+                    <div class="filter-btn ${timelineFilter==='danas'?'active':''}" onclick="app.setFilter('danas')">DANAS</div>
+                    <div class="filter-btn ${timelineFilter==='hitno'?'active':''}" onclick="app.setFilter('hitno')">🚨 HITNO</div>
                 </div>`;
 
                 const overdue = active.filter(t => t.date < today).sort((a,b) => a.date > b.date ? 1 : -1);
@@ -319,121 +324,125 @@
                 if (isToday.length) el.innerHTML += `<div class="section-title bebas">DANAS</div>` + isToday.map(t => this.taskHTML(t)).join('');
                 if (upcoming.length) el.innerHTML += `<div class="section-title bebas">USKORO</div>` + upcoming.map(t => this.taskHTML(t)).join('');
             },
-
             renderGrid(el) {
                 let html = '<div class="grid">';
                 for (let k in CATS) {
-                    const c = tasks.filter(t => t.cat === k && !t.done).length;
+                    const c = tasks.filter(t => t.cat === k && !t.done && !t.deleted).length;
                     html += `<div class="cat-card" onclick="app.setPage('category', '${k}')">${c > 0 ? `<div class="cat-badge">${c}</div>` : ''}<i>${CATS[k].i}</i><div class="cat-name">${CATS[k].n}</div></div>`;
                 }
                 el.innerHTML = html + '</div>';
             },
-
             renderCategory(el) {
-                const catTasks = tasks.filter(t => t.cat === currentCat && !t.done);
-                el.innerHTML = catTasks.length ? catTasks.map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:40px; color:var(--muted)">Prazno.</div>';
+                const catTasks = tasks.filter(t => t.cat === currentCat && !t.done && !t.deleted);
+                el.innerHTML = catTasks.length ? catTasks.map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:50px; color:var(--muted)">ČISTO!</div>';
             },
-
             renderArchive(el) {
-                const done = tasks.filter(t => t.done);
-                el.innerHTML = done.length ? done.slice(-30).reverse().map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:40px; color:var(--muted)">Prazno.</div>';
+                const done = tasks.filter(t => t.done && !t.deleted);
+                const deleted = tasks.filter(t => t.deleted);
+                
+                let html = '';
+                if(done.length) {
+                    html += `<div class="section-title bebas">ZAVRŠENO</div>` + done.slice(-20).reverse().map(t => this.taskHTML(t)).join('');
+                }
+                if(deleted.length) {
+                    html += `<div class="section-title bebas" style="color:var(--red)">SMEĆE (RECYCLE BIN)</div>` + deleted.map(t => this.taskHTML(t, true)).join('');
+                }
+                el.innerHTML = html || '<div style="text-align:center; padding:50px; color:var(--muted)">ARHIVA JE PRAZNA.</div>';
             },
-
-            taskHTML(t) {
+            taskHTML(t, isTrash = false) {
                 const today = new Date().toISOString().split('T')[0];
                 const ds = t.date < today ? 'overdue' : (t.date === today ? 'today' : '');
                 const days = ['Ned', 'Pon', 'Uto', 'Sre', 'Čet', 'Pet', 'Sub'];
                 const dayName = t.date ? `(${days[new Date(t.date).getDay()]})` : '';
-                
-                // Čišćenje broja za WA
-                let cleanPhone = t.phone ? t.phone.replace(/[^0-9+]/g, '') : '';
-                if (cleanPhone.startsWith('0') && !cleanPhone.startsWith('00')) {
-                    cleanPhone = '381' + cleanPhone.substring(1);
-                }
-                const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent('Podsetnik: ' + t.desc)}`;
+                const cleanPhone = t.phone ? t.phone.replace(/[^0-9+]/g, '') : '';
+                const waLink = `https://wa.me/${cleanPhone.startsWith('0') ? '381'+cleanPhone.substring(1) : cleanPhone}?text=${encodeURIComponent('Podsetnik: ' + t.desc)}`;
 
                 return `
                     <div class="task-container" data-id="${t.id}">
-                        <div class="swipe-action swipe-done">GOTOVO ✓</div>
-                        <div class="swipe-action swipe-delete">OBRIŠI ✕</div>
-                        <div class="task-card" style="border-left-color:${CATS[t.cat].c}; opacity:${t.done?0.5:1}" onclick="ui.openModal('${t.id}')">
+                        ${!isTrash ? `
+                            <div class="swipe-action swipe-done">GOTOVO ✓</div>
+                            <div class="swipe-action swipe-delete">OBRIŠI ✕</div>
+                        ` : ''}
+                        <div class="task-card" style="border-left-color:${CATS[t.cat].c}; opacity:${t.done || t.deleted ? 0.6 : 1}; ${t.deleted ? 'transform: none !important;' : ''}" onclick="${!t.deleted ? `ui.openModal('${t.id}')` : ''}">
                             <div class="task-info">
-                                <div class="task-desc" style="${t.done?'text-decoration:line-through':''}">${t.desc}</div>
+                                <div class="task-desc" style="${t.done || t.deleted ? 'text-decoration:line-through' : ''}">${t.desc}</div>
                                 <div class="task-meta">
-                                    <span style="color:${CATS[t.cat].c}; font-weight:600;">${CATS[t.cat].i} ${CATS[t.cat].n}</span>
+                                    <span style="color:${CATS[t.cat].c}; font-weight:700;">${CATS[t.cat].i} ${CATS[t.cat].n}</span>
                                     ${t.date ? `<span class="date-badge ${ds}">${t.date.split('-')[2]}.${t.date.split('-')[1]}. ${dayName}</span>` : ''}
-                                    ${t.priority === 'hitno' ? `<span style="color:#e74c3c; font-weight:bold;">🚨 HITNO</span>` : ''}
+                                    ${t.priority === 'hitno' ? `<span style="color:var(--red); font-weight:bold;">🚨 HITNO</span>` : ''}
                                 </div>
                             </div>
                             <div class="contact-btns">
-                                ${t.phone ? `
-                                    <a href="tel:${t.phone}" class="c-btn c-tel" onclick="event.stopPropagation()">📞</a>
+                                ${t.deleted ? `<span class="c-btn c-restore" onclick="event.stopPropagation(); app.restoreTask('${t.id}')">↩️</span>` : ''}
+                                ${t.phone && !t.deleted ? `
+                                    <a href="tel:${cleanPhone}" class="c-btn c-tel" onclick="event.stopPropagation()">📞</a>
                                     <a href="${waLink}" target="_blank" class="c-btn c-wa" onclick="event.stopPropagation()">💬</a>
                                 ` : ''}
-                                <div class="checkbox-container">
-                                    <input type="checkbox" ${t.done?'checked':''} onclick="event.stopPropagation(); app.toggleTask('${t.id}')">
-                                </div>
+                                ${!t.deleted ? `
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" ${t.done?'checked':''} onclick="event.stopPropagation(); app.toggleTask('${t.id}')">
+                                    </div>
+                                ` : ''}
+                                ${isTrash ? `<span class="c-btn" style="color:var(--red)" onclick="event.stopPropagation(); app.permaDelete('${t.id}')">🗑</span>` : ''}
                             </div>
                         </div>
                     </div>`;
             },
-
             setFilter(f) { timelineFilter = f; this.render(); },
             toggleTask(id) {
                 const t = tasks.find(x => x.id === id);
                 if(t) { t.done = !t.done; this.sync(); }
             },
             deleteTask(id) {
-                tasks = tasks.filter(t => t.id !== id);
-                this.sync();
+                const t = tasks.find(x => x.id === id);
+                if(t) { t.deleted = true; this.sync(); }
             },
-            showSettings() { document.getElementById('settings-overlay').classList.add('open'); },
-            
+            restoreTask(id) {
+                const t = tasks.find(x => x.id === id);
+                if(t) { t.deleted = false; this.sync(); }
+            },
+            permaDelete(id) {
+                if(confirm('Trajno obrisati?')) {
+                    tasks = tasks.filter(t => t.id !== id);
+                    this.sync();
+                }
+            },
             exportData() {
                 const dataStr = JSON.stringify(tasks);
                 const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-                const exportFileDefaultName = 'pro_backup_' + new Date().toISOString().split('T')[0] + '.json';
-                const linkElement = document.createElement('a');
-                linkElement.setAttribute('href', dataUri);
-                linkElement.setAttribute('download', exportFileDefaultName);
-                linkElement.click();
+                const link = document.createElement('a');
+                link.setAttribute('href', dataUri);
+                link.setAttribute('download', 'prohoreca_backup.json');
+                link.click();
             },
-
             importData(e) {
-                const file = e.target.files[0];
-                if (!file) return;
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     try {
-                        const importedTasks = JSON.parse(e.target.result);
-                        if(Array.isArray(importedTasks)) {
-                            if(confirm('Učitati podatke? Ovo će obrisati trenutne zadatke.')) {
-                                tasks = importedTasks;
-                                this.sync();
-                                document.getElementById('settings-overlay').classList.remove('open');
-                            }
-                        }
-                    } catch(err) { alert('Greška pri učitavanju.'); }
+                        tasks = JSON.parse(e.target.result);
+                        this.sync();
+                    } catch(err) { alert('Greška.'); }
                 };
-                reader.readAsText(file);
+                reader.readAsText(e.target.files[0]);
             },
-
+            showSettings() { document.getElementById('settings-overlay').classList.add('open'); },
             initSwipe() {
+                if (currentPage === 'archive') return; // Isključi swipe u arhivi zbog stabilnosti
                 document.querySelectorAll('.task-container').forEach(container => {
                     const card = container.querySelector('.task-card');
                     let startX = 0, currentX = 0;
                     container.addEventListener('touchstart', e => { startX = e.touches[0].clientX; card.style.transition = 'none'; }, {passive: true});
                     container.addEventListener('touchmove', e => {
                         currentX = e.touches[0].clientX - startX;
-                        if (currentX > 0) { container.querySelector('.swipe-done').style.opacity = 1; container.querySelector('.swipe-delete').style.opacity = 0; } 
+                        if (currentX > 0) { container.querySelector('.swipe-done').style.opacity = 1; container.querySelector('.swipe-delete').style.opacity = 0; }
                         else { container.querySelector('.swipe-done').style.opacity = 0; container.querySelector('.swipe-delete').style.opacity = 1; }
                         card.style.transform = `translateX(${currentX}px)`;
                     }, {passive: true});
                     container.addEventListener('touchend', () => {
-                        card.style.transition = 'transform 0.3s ease';
+                        card.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
                         const id = container.getAttribute('data-id');
-                        if (currentX > 130) app.toggleTask(id);
-                        else if (currentX < -130) { if(confirm('Obriši?')) app.deleteTask(id); }
+                        if (currentX > 140) app.toggleTask(id);
+                        else if (currentX < -140) app.deleteTask(id);
                         card.style.transform = `translateX(0px)`;
                         currentX = 0;
                     });
@@ -453,14 +462,14 @@
                     document.getElementById('task-cat').value = t.cat;
                     document.getElementById('task-date').value = t.date;
                     document.getElementById('task-priority').value = t.priority;
-                    document.getElementById('modal-heading').innerText = 'Izmeni';
+                    document.getElementById('modal-heading').innerText = 'IZMENI';
                 } else {
                     document.getElementById('task-id').value = '';
                     document.getElementById('task-desc').value = '';
                     document.getElementById('task-phone').value = '';
                     document.getElementById('task-date').value = '';
                     document.getElementById('task-priority').value = 'normal';
-                    document.getElementById('modal-heading').innerText = 'Novi zadatak';
+                    document.getElementById('modal-heading').innerText = 'NOVI ZADATAK';
                 }
                 document.getElementById('modal-overlay').classList.add('open');
             },
