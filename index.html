@@ -1,1313 +1,459 @@
 <!DOCTYPE html>
 <html lang="sr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0e0e0f">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Podsetnik">
-<meta name="mobile-web-app-capable" content="yes">
-<title>Podsetnik — PROHORECA</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" href="icon-192.png">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0e0e0f;
-    --surface: #161618;
-    --card: #1e1e21;
-    --border: #2a2a2e;
-    --accent: #f5a623;
-    --accent2: #e8521a;
-    --green: #2ecc71;
-    --red: #e74c3c;
-    --blue: #3498db;
-    --purple: #9b59b6;
-    --text: #e8e8ea;
-    --muted: #888890;
-    --tab-h: 68px;
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; overscroll-behavior: none; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'IBM Plex Sans', sans-serif;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    overflow-x: hidden;
-  }
-  .app { max-width: 480px; margin: 0 auto; position: relative; min-height: 100vh; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PROHORECA | Podsetnik</title>
+    
+    <!-- PWA Meta Tagovi -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0e0e0f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345573.png">
 
-  /* HEADER */
-  header {
-    padding: 18px 20px 14px;
-    padding-top: calc(18px + env(safe-area-inset-top, 0px));
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--accent); }
-  .today-badge {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px; color: var(--muted);
-    background: var(--card); padding: 4px 10px; border-radius: 20px;
-  }
-  .notif-btn {
-    background: none; border: 1px solid var(--border);
-    border-radius: 8px; padding: 8px 12px; cursor: pointer;
-    color: var(--muted); font-size: 16px; min-width: 44px; min-height: 44px;
-    display: flex; align-items: center; justify-content: center;
-  }
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #0e0e0f;
+            --surface: #161618;
+            --card: #1e1e21;
+            --border: #2a2a2e;
+            --accent: #f5a623;
+            --text: #e8e8ea;
+            --muted: #888890;
+            
+            /* Boje kategorija */
+            --cat-upiti: #3498db;
+            --cat-projekti: #e67e22;
+            --cat-obilazak: #2ecc71;
+            --cat-dobavljaci: #9b59b6;
+            --cat-proizvodnja: #95a5a6;
+            --cat-finansije: #f1c40f;
+            --cat-vozila: #e74c3c;
+            --cat-marketing: #1abc9c;
+            --cat-opsti: #7f8c8d;
 
-  /* TABS */
-  .tabs {
-    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 100%; max-width: 480px;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    display: flex; z-index: 200;
-    height: calc(var(--tab-h) + var(--safe-bottom));
-    padding-bottom: var(--safe-bottom);
-  }
-  .tab {
-    flex: 1; display: flex; flex-direction: column; align-items: center;
-    justify-content: center; gap: 4px;
-    cursor: pointer; border: none; background: none;
-    color: var(--muted); font-size: 10px;
-    font-family: 'IBM Plex Sans', sans-serif;
-    transition: color 0.2s; padding-bottom: 4px;
-    min-height: 44px;
-  }
-  .tab.active { color: var(--accent); }
-  .tab-icon { font-size: 20px; }
-  .tab-badge {
-    position: absolute; top: 6px; right: 4px;
-    background: var(--accent2); color: white;
-    font-size: 9px; border-radius: 10px;
-    padding: 1px 5px; font-weight: 600;
-  }
-  .tab-wrap { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
 
-  /* MAIN CONTENT */
-  main {
-    padding: 16px 16px calc(var(--tab-h) + var(--safe-bottom) + 16px);
-  }
-  .page { display: none; }
-  .page.active { display: block; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'IBM Plex Sans', sans-serif;
+            overflow-x: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-  /* SECTION TITLE */
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 13px; letter-spacing: 3px;
-    color: var(--muted); margin: 20px 0 10px;
-  }
+        .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
 
-  /* CARDS */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    position: relative;
-    animation: fadeIn 0.2s ease;
-  }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-  .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-  .card-title { font-size: 15px; font-weight: 600; line-height: 1.3; }
-  .card-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
-  .status-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    flex-shrink: 0; margin-top: 4px;
-  }
-  .card-dates {
-    display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;
-  }
-  .date-chip {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px; padding: 3px 8px;
-    border-radius: 6px; background: var(--surface);
-    border: 1px solid var(--border);
-    display: flex; align-items: center; gap: 4px;
-  }
-  .date-chip.urgent { border-color: var(--red); color: var(--red); }
-  .date-chip.soon { border-color: var(--accent); color: var(--accent); }
-  .date-chip.ok { border-color: var(--green); color: var(--green); }
-  .card-actions { display: flex; gap: 8px; margin-top: 10px; }
+        /* HEADER */
+        header {
+            padding: 20px 20px 10px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-  .btn {
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 12px; font-weight: 500;
-    padding: 8px 14px; border-radius: 8px;
-    border: none; cursor: pointer; transition: all 0.15s;
-    min-height: 36px; display: inline-flex; align-items: center;
-  }
-  .btn-ghost { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
-  .btn-ghost:active { color: var(--text); }
-  .btn-danger { background: rgba(231,76,60,0.15); color: var(--red); border: 1px solid rgba(231,76,60,0.3); }
-  .btn-accent { background: var(--accent); color: #000; font-weight: 600; }
-  .btn-sm { padding: 6px 12px; font-size: 11px; min-height: 32px; }
+        .logo { font-size: 22px; color: var(--accent); }
+        .global-badge { background: var(--accent); color: #000; padding: 2px 8px; border-radius: 10px; font-weight: bold; font-size: 12px; }
 
-  /* FAB */
-  .fab {
-    position: fixed;
-    bottom: calc(var(--tab-h) + var(--safe-bottom) + 16px);
-    right: calc(50% - 224px);
-    width: 56px; height: 56px;
-    background: var(--accent);
-    border-radius: 16px;
-    border: none; cursor: pointer;
-    font-size: 28px; color: #000;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 20px rgba(245,166,35,0.4);
-    transition: transform 0.15s, box-shadow 0.15s;
-    z-index: 150;
-  }
-  .fab:active { transform: scale(0.93); }
-  @media (max-width: 480px) { .fab { right: 16px; } }
+        /* MAIN CONTENT */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px 15px 100px;
+        }
 
-  /* MODAL */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 300; display: flex;
-    align-items: flex-end; justify-content: center;
-    backdrop-filter: blur(4px);
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.2s;
-  }
-  .modal-overlay.open { opacity: 1; pointer-events: all; }
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px 20px 0 0;
-    padding: 24px 20px;
-    padding-bottom: calc(40px + var(--safe-bottom));
-    width: 100%; max-width: 480px;
-    max-height: 92vh; overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    transform: translateY(100%);
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  .modal-overlay.open .modal { transform: translateY(0); }
-  .modal-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px; letter-spacing: 2px;
-    margin-bottom: 20px; color: var(--accent);
-  }
-  /* Drag handle */
-  .modal::before {
-    content: ''; display: block;
-    width: 40px; height: 4px;
-    background: var(--border); border-radius: 2px;
-    margin: 0 auto 20px;
-  }
+        /* NAVIGATION */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 500px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            padding: 10px 0 calc(10px + var(--safe-bottom));
+            z-index: 90;
+        }
 
-  /* FORM */
-  .form-group { margin-bottom: 16px; }
-  label {
-    display: block; font-size: 11px; color: var(--muted);
-    margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase;
-  }
-  input, select, textarea {
-    width: 100%; background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px; padding: 12px 14px;
-    color: var(--text); font-size: 16px; /* 16px sprečava zoom na iOS */
-    font-family: 'IBM Plex Sans', sans-serif;
-    outline: none; transition: border-color 0.2s;
-    -webkit-appearance: none; appearance: none;
-  }
-  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-  textarea { resize: vertical; min-height: 80px; }
-  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23888890' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
-  select option { background: #1e1e21; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .nav-item.active { color: var(--accent); }
+        .nav-icon { font-size: 20px; display: block; margin-bottom: 2px; }
 
-  /* STATUS COLORS */
-  .s-yellow { background: #f5a623; }
-  .s-green { background: #2ecc71; }
-  .s-red { background: #e74c3c; }
-  .s-blue { background: #3498db; }
-  .s-purple { background: #9b59b6; }
-  .s-gray { background: #555; }
+        /* FAB */
+        .fab {
+            position: fixed;
+            bottom: calc(80px + var(--safe-bottom));
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: var(--accent);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border: none;
+            cursor: pointer;
+            z-index: 80;
+        }
 
-  /* TODAY PANEL */
-  .today-panel {
-    background: linear-gradient(135deg, rgba(245,166,35,0.12), rgba(232,82,26,0.08));
-    border: 1px solid rgba(245,166,35,0.25);
-    border-radius: 14px; padding: 16px; margin-bottom: 20px;
-  }
-  .today-panel h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px; letter-spacing: 2px; color: var(--accent);
-    margin-bottom: 10px;
-  }
-  .today-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 13px;
-  }
-  .today-item:last-child { border-bottom: none; }
-  .today-icon { font-size: 16px; width: 24px; text-align: center; }
+        /* CARDS */
+        .task-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 5px solid transparent;
+            position: relative;
+        }
+        .task-desc { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+        .task-meta { font-size: 12px; color: var(--muted); display: flex; gap: 12px; align-items: center; }
+        .priority-hitno { color: #ff4757; font-weight: bold; }
+        
+        .date-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 11px;
+            background: var(--border);
+        }
+        .overdue { background: #e74c3c; color: white; }
+        .today { background: #f5a623; color: black; }
 
-  /* CALENDAR */
-  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 16px; }
-  .cal-day-label { text-align: center; font-size: 10px; color: var(--muted); padding: 4px 0; }
-  .cal-day {
-    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-    font-size: 13px; border-radius: 8px; cursor: pointer;
-    position: relative; transition: background 0.15s;
-    min-height: 36px;
-  }
-  .cal-day:active { background: var(--card); }
-  .cal-day.today { background: var(--accent); color: #000; font-weight: 700; }
-  .cal-day.has-event::after {
-    content: ''; position: absolute; bottom: 3px;
-    width: 4px; height: 4px; border-radius: 50%; background: var(--accent2);
-  }
-  .cal-day.today.has-event::after { background: #000; }
-  .cal-day.other-month { opacity: 0.25; }
-  .cal-nav {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 16px;
-  }
-  .cal-nav button {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 8px; padding: 10px 16px; color: var(--text);
-    cursor: pointer; font-size: 18px; min-width: 44px; min-height: 44px;
-  }
-  .cal-month {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px; letter-spacing: 2px;
-  }
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .cat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 15px 5px;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+        }
+        .cat-card i { font-size: 24px; display: block; margin-bottom: 8px; }
+        .cat-name { font-size: 10px; font-weight: bold; text-transform: uppercase; color: var(--muted); }
+        .cat-badge { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #000; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
 
-  /* EMPTY STATE */
-  .empty {
-    text-align: center; padding: 40px 20px;
-    color: var(--muted); font-size: 13px;
-  }
-  .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            align-items: flex-end;
+            z-index: 1000;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--surface);
+            width: 100%;
+            border-radius: 25px 25px 0 0;
+            padding: 25px;
+            padding-bottom: calc(30px + var(--safe-bottom));
+        }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; }
+        input, select, textarea {
+            width: 100%; background: var(--card); border: 1px solid var(--border);
+            color: white; padding: 12px; border-radius: 10px; font-size: 16px;
+        }
+        .btn-save { background: var(--accent); color: black; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; margin-top: 10px; }
+        .btn-cancel { color: var(--muted); text-align: center; display: block; margin-top: 15px; font-size: 14px; text-decoration: none; }
+        
+        /* FILTERS */
+        .filters { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 5px; }
+        .filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 6px 15px; border-radius: 20px; font-size: 12px; white-space: nowrap; }
+        .filter-btn.active { background: var(--accent); color: black; border-color: var(--accent); }
 
-  /* PERSON TAG */
-  .person-tag {
-    display: inline-flex; align-items: center; gap: 4px;
-    background: rgba(52,152,219,0.15);
-    border: 1px solid rgba(52,152,219,0.3);
-    color: var(--blue); border-radius: 20px;
-    font-size: 11px; padding: 3px 9px;
-    font-weight: 500;
-  }
-
-  /* PRIORITY */
-  .priority-high { border-left: 3px solid var(--red); }
-  .priority-mid { border-left: 3px solid var(--accent); }
-  .priority-low { border-left: 3px solid var(--border); }
-
-  /* TASK CHECK */
-  .task-check {
-    width: 24px; height: 24px; border-radius: 7px;
-    border: 2px solid var(--border); cursor: pointer;
-    flex-shrink: 0; transition: all 0.15s;
-    display: flex; align-items: center; justify-content: center;
-    background: none; color: white; font-size: 13px;
-    min-width: 24px;
-  }
-  .task-check.done { background: var(--green); border-color: var(--green); }
-
-  .filter-bar {
-    display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
-    margin-bottom: 12px; scrollbar-width: none;
-  }
-  .filter-bar::-webkit-scrollbar { display: none; }
-  .filter-chip {
-    white-space: nowrap; font-size: 12px;
-    padding: 7px 14px; border-radius: 20px;
-    border: 1px solid var(--border);
-    background: none; color: var(--muted); cursor: pointer;
-    font-family: 'IBM Plex Sans', sans-serif;
-    transition: all 0.15s; min-height: 36px;
-  }
-  .filter-chip.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
-
-  /* ODLOŽENO */
-  .waiting-for {
-    font-size: 11px; color: var(--muted);
-    margin-top: 8px; display: flex; align-items: center; gap: 4px;
-  }
-
-  /* SNACKBAR */
-  .snackbar {
-    position: fixed; bottom: calc(var(--tab-h) + var(--safe-bottom) + 80px);
-    left: 50%; transform: translateX(-50%);
-    background: #2a2a2e; color: var(--text);
-    padding: 12px 22px; border-radius: 10px;
-    font-size: 13px; z-index: 400;
-    opacity: 0; transition: opacity 0.3s;
-    pointer-events: none; white-space: nowrap;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  }
-  .snackbar.show { opacity: 1; }
-
-  /* INSTALL BANNER */
-  .install-banner {
-    background: linear-gradient(135deg, rgba(245,166,35,0.15), rgba(232,82,26,0.1));
-    border: 1px solid rgba(245,166,35,0.3);
-    border-radius: 12px; padding: 14px 16px;
-    margin-bottom: 16px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .install-banner-text { flex: 1; font-size: 13px; }
-  .install-banner-text strong { display: block; font-size: 14px; color: var(--accent); margin-bottom: 2px; }
-  .install-banner button { flex-shrink: 0; }
-  .install-banner .dismiss {
-    background: none; border: none; color: var(--muted);
-    font-size: 18px; cursor: pointer; padding: 4px;
-  }
-
-  /* SWIPE DELETE hint */
-  .delete-hint {
-    font-size: 10px; color: var(--muted); text-align: right;
-    margin-bottom: 4px; opacity: 0.6;
-  }
-</style>
+        .section-title { font-size: 14px; color: var(--accent); margin: 20px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+    </style>
 </head>
 <body>
-<div class="app">
-  <header>
-    <div class="logo">PROHORECA</div>
-    <div class="today-badge" id="todayBadge"></div>
-    <button class="notif-btn" onclick="requestNotif()" title="Uključi podsetnike">🔔</button>
-  </header>
-  <main>
-    <!-- DANAS PAGE -->
-    <div class="page active" id="page-danas">
-      <div id="installBanner"></div>
-      <div class="today-panel">
-        <h2>🗓 DANAS & SUTRA</h2>
-        <div id="todayList"></div>
-      </div>
-      <div class="section-title">USKORO — 7 DANA</div>
-      <div id="upcomingList"></div>
-    </div>
 
-    <!-- PROJEKTI PAGE -->
-    <div class="page" id="page-projekti">
-      <div class="filter-bar" id="projectFilter">
-        <button class="filter-chip active" onclick="filterProjects('sve',this)">Sve</button>
-        <button class="filter-chip" onclick="filterProjects('aktivan',this)">Aktivni</button>
-        <button class="filter-chip" onclick="filterProjects('montaza',this)">Montaža</button>
-        <button class="filter-chip" onclick="filterProjects('zavrsen',this)">Završeni</button>
-      </div>
-      <div id="projectList"></div>
-    </div>
+    <header>
+        <div class="logo bebas">PROHORECA <span id="header-title" style="color:white; margin-left:10px;">TIMELINE</span></div>
+        <div class="global-badge" id="total-count">0</div>
+    </header>
 
-    <!-- ZADACI PAGE -->
-    <div class="page" id="page-zadaci">
-      <div class="filter-bar" id="personFilter"></div>
-      <div id="taskList"></div>
-    </div>
+    <main id="app-shell"></main>
 
-    <!-- ODLOŽENO PAGE -->
-    <div class="page" id="page-odlozeno">
-      <div id="odlList"></div>
-    </div>
-
-    <!-- KALENDAR PAGE -->
-    <div class="page" id="page-kalendar">
-      <div class="cal-nav">
-        <button onclick="calMove(-1)">‹</button>
-        <div class="cal-month" id="calTitle"></div>
-        <button onclick="calMove(1)">›</button>
-      </div>
-      <div class="cal-grid" id="calGrid"></div>
-      <div class="section-title">EVENTI OVOG MESECA</div>
-      <div id="calEventList"></div>
-    </div>
-  </main>
-
-  <!-- BOTTOM TABS -->
-  <nav class="tabs">
-    <button class="tab active" onclick="showPage('danas',this)">
-      <div class="tab-wrap"><span class="tab-icon">⚡</span><span>Danas</span></div>
-    </button>
-    <button class="tab" onclick="showPage('projekti',this)">
-      <div class="tab-wrap">
-        <span class="tab-icon">🏗</span><span>Projekti</span>
-        <span class="tab-badge" id="badge-projekti" style="display:none"></span>
-      </div>
-    </button>
-    <button class="tab" onclick="showPage('zadaci',this)">
-      <div class="tab-wrap">
-        <span class="tab-icon">✅</span><span>Zadaci</span>
-        <span class="tab-badge" id="badge-zadaci" style="display:none"></span>
-      </div>
-    </button>
-    <button class="tab" onclick="showPage('odlozeno',this)">
-      <div class="tab-wrap">
-        <span class="tab-icon">⏸</span><span>Odloženo</span>
-        <span class="tab-badge" id="badge-odlozeno" style="display:none"></span>
-      </div>
-    </button>
-    <button class="tab" onclick="showPage('kalendar',this)">
-      <div class="tab-wrap"><span class="tab-icon">📅</span><span>Kalendar</span></div>
-    </button>
-  </nav>
-
-  <button class="fab" id="fabBtn" onclick="openFab()">+</button>
-</div>
-
-<!-- MODAL PROJEKAT -->
-<div class="modal-overlay" id="modalProjekat">
-  <div class="modal">
-    <div class="modal-title" id="modalProjekatTitle">NOVI PROJEKAT</div>
-    <div class="form-group">
-      <label>Klijent / Naziv</label>
-      <input type="text" id="p_klijent" placeholder="Npr. Petrović — Pergola 4x5" autocomplete="off">
-    </div>
-    <div class="form-group">
-      <label>Napomena</label>
-      <textarea id="p_napomena" placeholder="Adresa, kontakt, detalji..."></textarea>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Datum isporuke</label>
-        <input type="date" id="p_isporuka">
-      </div>
-      <div class="form-group">
-        <label>Datum montaže</label>
-        <input type="date" id="p_montaza">
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Status</label>
-      <select id="p_status">
-        <option value="aktivan">🟡 Aktivan</option>
-        <option value="ceka">🔵 Čeka uplatu/meru</option>
-        <option value="montaza">🟠 Na montaži</option>
-        <option value="zavrsen">🟢 Završen</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Prioritet</label>
-      <select id="p_prioritet">
-        <option value="high">🔴 Visok</option>
-        <option value="mid">🟡 Srednji</option>
-        <option value="low">⚪ Nizak</option>
-      </select>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:8px;">
-      <button class="btn btn-ghost" style="flex:1" onclick="closeModal('modalProjekat')">Otkaži</button>
-      <button class="btn btn-accent" style="flex:2" onclick="saveProjekat()">Sačuvaj</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL ZADATAK -->
-<div class="modal-overlay" id="modalZadatak">
-  <div class="modal">
-    <div class="modal-title">NOVI ZADATAK</div>
-    <div class="form-group">
-      <label>Šta treba uraditi</label>
-      <input type="text" id="z_tekst" placeholder="Npr. Poslati ugovor Marku" autocomplete="off">
-    </div>
-    <div class="form-group">
-      <label>Ko treba da uradi</label>
-      <input type="text" id="z_osoba" placeholder="Ime osobe (ili 'Ja')" autocomplete="off">
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Rok</label>
-        <input type="date" id="z_rok">
-      </div>
-      <div class="form-group">
-        <label>Prioritet</label>
-        <select id="z_prioritet">
-          <option value="high">🔴 Visok</option>
-          <option value="mid">🟡 Srednji</option>
-          <option value="low">⚪ Nizak</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Vezano za projekat (opciono)</label>
-      <select id="z_projekat"><option value="">— Nije vezano —</option></select>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:8px;">
-      <button class="btn btn-ghost" style="flex:1" onclick="closeModal('modalZadatak')">Otkaži</button>
-      <button class="btn btn-accent" style="flex:2" onclick="saveZadatak()">Sačuvaj</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL ODLOŽENO -->
-<div class="modal-overlay" id="modalOdlozeno">
-  <div class="modal">
-    <div class="modal-title">ODLOŽENO / ČEKA</div>
-    <div class="form-group">
-      <label>Šta je odloženo</label>
-      <input type="text" id="o_tekst" placeholder="Npr. Čeka uplatu avansa" autocomplete="off">
-    </div>
-    <div class="form-group">
-      <label>Čeka na...</label>
-      <input type="text" id="o_ceka" placeholder="Npr. Potvrdu klijenta, uplatu, meru..." autocomplete="off">
-    </div>
-    <div class="form-group">
-      <label>Klijent / Kontakt</label>
-      <input type="text" id="o_klijent" placeholder="Ko je u pitanju" autocomplete="off">
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Podsetni me</label>
-        <input type="date" id="o_podsetnik">
-      </div>
-      <div class="form-group">
-        <label>Rok krajnji</label>
-        <input type="date" id="o_rok">
-      </div>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:8px;">
-      <button class="btn btn-ghost" style="flex:1" onclick="closeModal('modalOdlozeno')">Otkaži</button>
-      <button class="btn btn-accent" style="flex:2" onclick="saveOdlozeno()">Sačuvaj</button>
-    </div>
-  </div>
-</div>
-
-<!-- FAB MENU -->
-<div class="modal-overlay" id="fabMenu">
-  <div class="modal" style="border-radius:20px 20px 0 0;">
-    <div class="modal-title">DODAJ NOVO</div>
-    <button class="card" style="width:100%;text-align:left;cursor:pointer;border:1px solid var(--border);margin-bottom:10px;" onclick="closeModal('fabMenu');openModal('modalProjekat')">
-      <div style="font-size:20px;margin-bottom:4px;">🏗</div>
-      <div style="font-weight:600;">Novi projekat / klijent</div>
-      <div style="font-size:12px;color:var(--muted);">Isporuka, montaža, status...</div>
-    </button>
-    <button class="card" style="width:100%;text-align:left;cursor:pointer;border:1px solid var(--border);margin-bottom:10px;" onclick="closeModal('fabMenu');openModal('modalZadatak')">
-      <div style="font-size:20px;margin-bottom:4px;">✅</div>
-      <div style="font-weight:600;">Novi zadatak</div>
-      <div style="font-size:12px;color:var(--muted);">Ko šta treba da uradi, do kad...</div>
-    </button>
-    <button class="card" style="width:100%;text-align:left;cursor:pointer;border:1px solid var(--border);" onclick="closeModal('fabMenu');openModal('modalOdlozeno')">
-      <div style="font-size:20px;margin-bottom:4px;">⏸</div>
-      <div style="font-weight:600;">Odložena stvar</div>
-      <div style="font-size:12px;color:var(--muted);">Čeka uplatu, odgovor, potvrdu...</div>
-    </button>
-  </div>
-</div>
-
-<div class="snackbar" id="snackbar"></div>
-
-<script>
-// ===== DATA =====
-let data = { projekti: [], zadaci: [], odlozeno: [] };
-let calDate = new Date();
-let currentProjectFilter = 'sve';
-let currentPersonFilter = 'svi';
-let editId = null;
-let deferredInstallPrompt = null;
-
-// ===== STORAGE (localStorage — radi lokalno, offline, bez servera) =====
-const STORAGE_KEY = 'podsetnik_v2';
-
-function loadData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) data = JSON.parse(raw);
-  } catch(e) {
-    console.warn('Greška pri čitanju podataka:', e);
-  }
-  render();
-}
-
-function saveData() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch(e) {
-    console.warn('Greška pri snimanju podataka:', e);
-    showSnack('⚠️ Nije moguće sačuvati — proverite memoriju');
-  }
-  render();
-}
-
-// ===== SERVICE WORKER REGISTRACIJA =====
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').then(reg => {
-      console.log('SW registered:', reg.scope);
-    }).catch(err => {
-      console.log('SW registration failed:', err);
-    });
-  });
-}
-
-// ===== PWA INSTALL =====
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredInstallPrompt = e;
-  showInstallBanner();
-});
-
-window.addEventListener('appinstalled', () => {
-  deferredInstallPrompt = null;
-  document.getElementById('installBanner').innerHTML = '';
-  showSnack('✅ Aplikacija instalirana!');
-});
-
-function showInstallBanner() {
-  const banner = document.getElementById('installBanner');
-  if (!banner) return;
-  banner.innerHTML = `
-    <div class="install-banner">
-      <div style="font-size:28px;">📱</div>
-      <div class="install-banner-text">
-        <strong>Dodaj na početni ekran</strong>
-        Koristi kao pravu aplikaciju, radi offline
-      </div>
-      <button class="btn btn-accent btn-sm" onclick="installApp()">Instaliraj</button>
-      <button class="dismiss" onclick="document.getElementById('installBanner').innerHTML=''">✕</button>
-    </div>
-  `;
-}
-
-async function installApp() {
-  if (!deferredInstallPrompt) {
-    showInstallInstructions();
-    return;
-  }
-  deferredInstallPrompt.prompt();
-  const { outcome } = await deferredInstallPrompt.userChoice;
-  deferredInstallPrompt = null;
-  if (outcome === 'accepted') showSnack('Instalacija u toku...');
-}
-
-function showInstallInstructions() {
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  let msg = '';
-  if (isIOS && isSafari) {
-    msg = 'Tapni "Podeli" (↑) pa "Dodaj na početni ekran"';
-  } else if (isIOS) {
-    msg = 'Otvori u Safari-ju, tapni "Podeli" (↑) pa "Dodaj na početni ekran"';
-  } else {
-    msg = 'U meniju browser-a (⋮) izaberi "Instaliraj aplikaciju" ili "Dodaj na početni ekran"';
-  }
-  alert('📱 ' + msg);
-}
-
-// ===== HELPERS =====
-function uid() { return Date.now().toString(36) + Math.random().toString(36).substr(2,5); }
-function today() { return new Date().toISOString().split('T')[0]; }
-
-function daysUntil(dateStr) {
-  if (!dateStr) return null;
-  const d = new Date(dateStr + 'T00:00:00');
-  const now = new Date(); now.setHours(0,0,0,0);
-  return Math.round((d - now) / 86400000);
-}
-
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr + 'T00:00:00');
-  return d.toLocaleDateString('sr-RS', { day:'2-digit', month:'2-digit' });
-}
-
-function dateChipClass(dateStr) {
-  const n = daysUntil(dateStr);
-  if (n === null) return '';
-  if (n <= 3) return 'urgent';
-  if (n <= 7) return 'soon';
-  return 'ok';
-}
-
-function dateLabel(dateStr) {
-  const n = daysUntil(dateStr);
-  if (n === null) return '';
-  if (n < 0) return ` (${Math.abs(n)}d kasno!)`;
-  if (n === 0) return ' (DANAS)';
-  if (n === 1) return ' (SUTRA)';
-  if (n <= 7) return ` (${n}d)`;
-  return '';
-}
-
-function statusColor(s) {
-  const m = {aktivan:'s-yellow', ceka:'s-blue', montaza:'s-red', zavrsen:'s-green'};
-  return m[s] || 's-gray';
-}
-
-function statusLabel(s) {
-  const m = {aktivan:'Aktivan', ceka:'Čeka', montaza:'Montaža', zavrsen:'Završen'};
-  return m[s] || s;
-}
-
-function priorityClass(p) {
-  return p === 'high' ? 'priority-high' : p === 'mid' ? 'priority-mid' : 'priority-low';
-}
-
-function showSnack(msg) {
-  const s = document.getElementById('snackbar');
-  s.textContent = msg;
-  s.classList.add('show');
-  setTimeout(() => s.classList.remove('show'), 2800);
-}
-
-function esc(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ===== TODAY BADGE =====
-function updateBadge() {
-  const d = new Date();
-  const days = ['Ned','Pon','Uto','Sre','Čet','Pet','Sub'];
-  const months = ['Jan','Feb','Mar','Apr','Maj','Jun','Jul','Avg','Sep','Okt','Nov','Dec'];
-  document.getElementById('todayBadge').textContent =
-    `${days[d.getDay()]} ${d.getDate()}. ${months[d.getMonth()]}`;
-}
-
-// ===== PAGES =====
-function showPage(name, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  btn.classList.add('active');
-  if (name === 'kalendar') renderCalendar();
-  if (name === 'zadaci') renderPersonFilter();
-}
-
-// ===== MODALS =====
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-  document.body.style.overflow = 'hidden';
-  if (id === 'modalZadatak') {
-    const sel = document.getElementById('z_projekat');
-    sel.innerHTML = '<option value="">— Nije vezano —</option>';
-    data.projekti.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p.id; opt.textContent = p.klijent;
-      sel.appendChild(opt);
-    });
-  }
-  if (id === 'modalProjekat' && !editId) {
-    document.getElementById('modalProjekatTitle').textContent = 'NOVI PROJEKAT';
-  }
-}
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-  document.body.style.overflow = '';
-  editId = null;
-}
-
-function openFab() { openModal('fabMenu'); }
-
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) closeModal(overlay.id);
-  });
-});
-
-// Zatvori modal pritiskom na Escape
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
-  }
-});
-
-// ===== SAVE FUNCTIONS =====
-function saveProjekat() {
-  const k = document.getElementById('p_klijent').value.trim();
-  if (!k) { showSnack('Unesite naziv klijenta!'); return; }
-  const obj = {
-    id: editId || uid(),
-    klijent: k,
-    napomena: document.getElementById('p_napomena').value.trim(),
-    isporuka: document.getElementById('p_isporuka').value,
-    montaza: document.getElementById('p_montaza').value,
-    status: document.getElementById('p_status').value,
-    prioritet: document.getElementById('p_prioritet').value,
-    created: new Date().toISOString()
-  };
-  if (editId) {
-    const i = data.projekti.findIndex(x => x.id === editId);
-    if (i > -1) data.projekti[i] = obj;
-  } else {
-    data.projekti.push(obj);
-  }
-  clearForm(['p_klijent','p_napomena','p_isporuka','p_montaza']);
-  closeModal('modalProjekat');
-  saveData();
-  showSnack(editId ? '✅ Projekat ažuriran!' : '✅ Projekat dodat!');
-  showPage('projekti', document.querySelectorAll('.tab')[1]);
-}
-
-function saveZadatak() {
-  const t = document.getElementById('z_tekst').value.trim();
-  if (!t) { showSnack('Unesite opis zadatka!'); return; }
-  const obj = {
-    id: editId || uid(),
-    tekst: t,
-    osoba: document.getElementById('z_osoba').value.trim() || 'Ja',
-    rok: document.getElementById('z_rok').value,
-    prioritet: document.getElementById('z_prioritet').value,
-    projekat: document.getElementById('z_projekat').value,
-    done: false,
-    created: new Date().toISOString()
-  };
-  if (editId) {
-    const i = data.zadaci.findIndex(x => x.id === editId);
-    if (i > -1) { obj.done = data.zadaci[i].done; data.zadaci[i] = obj; }
-  } else {
-    data.zadaci.push(obj);
-  }
-  clearForm(['z_tekst','z_osoba','z_rok']);
-  closeModal('modalZadatak');
-  saveData();
-  showSnack(editId ? '✅ Zadatak ažuriran!' : '✅ Zadatak dodat!');
-  showPage('zadaci', document.querySelectorAll('.tab')[2]);
-}
-
-function saveOdlozeno() {
-  const t = document.getElementById('o_tekst').value.trim();
-  if (!t) { showSnack('Unesite opis!'); return; }
-  const obj = {
-    id: editId || uid(),
-    tekst: t,
-    ceka: document.getElementById('o_ceka').value.trim(),
-    klijent: document.getElementById('o_klijent').value.trim(),
-    podsetnik: document.getElementById('o_podsetnik').value,
-    rok: document.getElementById('o_rok').value,
-    resolved: false,
-    created: new Date().toISOString()
-  };
-  if (editId) {
-    const i = data.odlozeno.findIndex(x => x.id === editId);
-    if (i > -1) data.odlozeno[i] = obj;
-  } else {
-    data.odlozeno.push(obj);
-  }
-  clearForm(['o_tekst','o_ceka','o_klijent','o_podsetnik','o_rok']);
-  closeModal('modalOdlozeno');
-  saveData();
-  showSnack(editId ? '✅ Ažurirano!' : '✅ Odloženo sačuvano!');
-  showPage('odlozeno', document.querySelectorAll('.tab')[3]);
-}
-
-function clearForm(ids) {
-  ids.forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
-}
-
-// ===== DELETE =====
-function deleteProjekat(id) {
-  if (!confirm('Obriši projekat?')) return;
-  data.projekti = data.projekti.filter(x => x.id !== id);
-  saveData(); showSnack('Projekat obrisan.');
-}
-
-function deleteZadatak(id) {
-  data.zadaci = data.zadaci.filter(x => x.id !== id);
-  saveData();
-}
-
-function deleteOdlozeno(id) {
-  data.odlozeno = data.odlozeno.filter(x => x.id !== id);
-  saveData();
-}
-
-function toggleTask(id) {
-  const z = data.zadaci.find(x => x.id === id);
-  if (z) { z.done = !z.done; saveData(); }
-}
-
-function resolveOdlozeno(id) {
-  const o = data.odlozeno.find(x => x.id === id);
-  if (o) { o.resolved = true; saveData(); showSnack('✅ Označeno kao rešeno!'); }
-}
-
-// ===== EDIT =====
-function editProjekat(id) {
-  const p = data.projekti.find(x => x.id === id);
-  if (!p) return;
-  editId = id;
-  document.getElementById('p_klijent').value = p.klijent;
-  document.getElementById('p_napomena').value = p.napomena || '';
-  document.getElementById('p_isporuka').value = p.isporuka || '';
-  document.getElementById('p_montaza').value = p.montaza || '';
-  document.getElementById('p_status').value = p.status;
-  document.getElementById('p_prioritet').value = p.prioritet;
-  document.getElementById('modalProjekatTitle').textContent = 'IZMENI PROJEKAT';
-  openModal('modalProjekat');
-}
-
-// ===== FILTERS =====
-function filterProjects(f, btn) {
-  currentProjectFilter = f;
-  document.querySelectorAll('#projectFilter .filter-chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  renderProjekti();
-}
-
-function filterPerson(f, btn) {
-  currentPersonFilter = f;
-  document.querySelectorAll('#personFilter .filter-chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  renderZadaci();
-}
-
-// ===== RENDER =====
-function render() {
-  updateBadge();
-  renderDanas();
-  renderProjekti();
-  renderPersonFilter();
-  renderZadaci();
-  renderOdlozeno();
-  updateBadges();
-}
-
-function updateBadges() {
-  const aktProjekti = data.projekti.filter(p => p.status !== 'zavrsen').length;
-  const openZadaci = data.zadaci.filter(z => !z.done).length;
-  const openOdl = data.odlozeno.filter(o => !o.resolved).length;
-  const bp = document.getElementById('badge-projekti');
-  const bz = document.getElementById('badge-zadaci');
-  const bo = document.getElementById('badge-odlozeno');
-  bp.style.display = aktProjekti > 0 ? 'block' : 'none'; bp.textContent = aktProjekti;
-  bz.style.display = openZadaci > 0 ? 'block' : 'none'; bz.textContent = openZadaci;
-  bo.style.display = openOdl > 0 ? 'block' : 'none'; bo.textContent = openOdl;
-}
-
-function renderDanas() {
-  const t = today();
-  const tom = new Date(); tom.setDate(tom.getDate()+1);
-  const tomStr = tom.toISOString().split('T')[0];
-  let items = [];
-
-  data.projekti.forEach(p => {
-    if (p.isporuka === t || p.isporuka === tomStr)
-      items.push({ icon: '📦', text: `Isporuka: ${esc(p.klijent)}`, date: p.isporuka });
-    if (p.montaza === t || p.montaza === tomStr)
-      items.push({ icon: '🔧', text: `Montaža: ${esc(p.klijent)}`, date: p.montaza });
-  });
-
-  data.zadaci.filter(z => !z.done).forEach(z => {
-    if (z.rok === t || z.rok === tomStr)
-      items.push({ icon: '✅', text: `${esc(z.tekst)} (${esc(z.osoba)})`, date: z.rok });
-  });
-
-  data.odlozeno.filter(o => !o.resolved).forEach(o => {
-    if (o.podsetnik === t || o.podsetnik === tomStr)
-      items.push({ icon: '⏸', text: `Proveri: ${esc(o.tekst)}`, date: o.podsetnik });
-  });
-
-  const el = document.getElementById('todayList');
-  if (items.length === 0) {
-    el.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:4px 0;">Nema hitnih stvari danas. 👌</div>';
-  } else {
-    el.innerHTML = items.map(i => `
-      <div class="today-item">
-        <span class="today-icon">${i.icon}</span>
-        <div>
-          <div style="font-size:13px;font-weight:500;">${i.text}</div>
-          <div style="font-size:11px;color:var(--muted);">${i.date === t ? 'DANAS' : 'SUTRA'}</div>
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="app.setPage('timeline')">
+            <span class="nav-icon">📊</span> TIMELINE
         </div>
-      </div>
-    `).join('');
-  }
-
-  // Upcoming 7 days
-  const upcoming = [];
-  const in7 = new Date(); in7.setDate(in7.getDate()+7);
-  const in7Str = in7.toISOString().split('T')[0];
-
-  data.projekti.forEach(p => {
-    if (p.isporuka > tomStr && p.isporuka <= in7Str)
-      upcoming.push({ icon: '📦', text: `Isporuka: ${esc(p.klijent)}`, date: p.isporuka });
-    if (p.montaza > tomStr && p.montaza <= in7Str)
-      upcoming.push({ icon: '🔧', text: `Montaža: ${esc(p.klijent)}`, date: p.montaza });
-  });
-
-  data.zadaci.filter(z => !z.done).forEach(z => {
-    if (z.rok > tomStr && z.rok <= in7Str)
-      upcoming.push({ icon: '✅', text: `${esc(z.tekst)} (${esc(z.osoba)})`, date: z.rok });
-  });
-
-  upcoming.sort((a,b) => a.date.localeCompare(b.date));
-
-  const uEl = document.getElementById('upcomingList');
-  if (upcoming.length === 0) {
-    uEl.innerHTML = '<div class="empty"><div class="empty-icon">📭</div>Nema zakazanih stvari u narednih 7 dana</div>';
-  } else {
-    uEl.innerHTML = upcoming.map(i => `
-      <div class="card" style="display:flex;align-items:center;gap:12px;">
-        <span style="font-size:20px;">${i.icon}</span>
-        <div style="flex:1">
-          <div style="font-size:14px;font-weight:500;">${i.text}</div>
-          <div class="date-chip ${dateChipClass(i.date)}" style="display:inline-flex;margin-top:4px;">
-            📅 ${formatDate(i.date)}${dateLabel(i.date)}
-          </div>
+        <div class="nav-item" onclick="app.setPage('categories')">
+            <span class="nav-icon">🗂️</span> KATEGORIJE
         </div>
-      </div>
-    `).join('');
-  }
-}
-
-function renderProjekti() {
-  let ps = [...data.projekti];
-  if (currentProjectFilter !== 'sve') ps = ps.filter(p => p.status === currentProjectFilter);
-  ps.sort((a,b) => {
-    const da = daysUntil(a.isporuka || a.montaza) ?? 999;
-    const db = daysUntil(b.isporuka || b.montaza) ?? 999;
-    return da - db;
-  });
-  const el = document.getElementById('projectList');
-  if (ps.length === 0) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">🏗</div>Nema projekata. Dodaj prvi!</div>';
-    return;
-  }
-  el.innerHTML = ps.map(p => `
-    <div class="card ${priorityClass(p.prioritet)}">
-      <div class="card-header">
-        <div style="flex:1;min-width:0;">
-          <div class="card-title">${esc(p.klijent)}</div>
-          ${p.napomena ? `<div class="card-sub">${esc(p.napomena.substring(0,80))}${p.napomena.length>80?'...':''}</div>` : ''}
+        <div class="nav-item" onclick="app.setPage('archive')">
+            <span class="nav-icon">✅</span> ARHIVA
         </div>
-        <div class="status-dot ${statusColor(p.status)}" title="${statusLabel(p.status)}"></div>
-      </div>
-      <div class="card-dates">
-        ${p.isporuka ? `<div class="date-chip ${dateChipClass(p.isporuka)}">📦 ${formatDate(p.isporuka)}${dateLabel(p.isporuka)}</div>` : ''}
-        ${p.montaza ? `<div class="date-chip ${dateChipClass(p.montaza)}">🔧 ${formatDate(p.montaza)}${dateLabel(p.montaza)}</div>` : ''}
-        <div class="date-chip" style="color:var(--muted)">${statusLabel(p.status)}</div>
-      </div>
-      <div class="card-actions">
-        <button class="btn btn-ghost btn-sm" onclick="editProjekat('${p.id}')">✏️ Izmeni</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteProjekat('${p.id}')">🗑</button>
-      </div>
-    </div>
-  `).join('');
-}
+    </nav>
 
-function renderPersonFilter() {
-  const persons = [...new Set(data.zadaci.map(z => z.osoba))].filter(Boolean);
-  const el = document.getElementById('personFilter');
-  el.innerHTML = `<button class="filter-chip ${currentPersonFilter==='svi'?'active':''}" onclick="filterPerson('svi',this)">Svi</button>`;
-  persons.forEach(p => {
-    const active = currentPersonFilter === p ? 'active' : '';
-    el.innerHTML += `<button class="filter-chip ${active}" onclick="filterPerson('${esc(p)}',this)">${esc(p)}</button>`;
-  });
-}
+    <button class="fab" onclick="ui.openModal()">+</button>
 
-function renderZadaci() {
-  let zs = [...data.zadaci];
-  if (currentPersonFilter !== 'svi') zs = zs.filter(z => z.osoba === currentPersonFilter);
-  zs.sort((a,b) => {
-    if (a.done !== b.done) return a.done ? 1 : -1;
-    const da = a.rok || '9999';
-    const db = b.rok || '9999';
-    return da.localeCompare(db);
-  });
-  const el = document.getElementById('taskList');
-  if (zs.length === 0) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">✅</div>Nema zadataka!</div>';
-    return;
-  }
-  el.innerHTML = zs.map(z => {
-    const proj = z.projekat ? data.projekti.find(p => p.id === z.projekat) : null;
-    return `
-      <div class="card ${priorityClass(z.prioritet)}" style="${z.done ? 'opacity:0.45' : ''}">
-        <div style="display:flex;align-items:flex-start;gap:12px;">
-          <button class="task-check ${z.done ? 'done' : ''}" onclick="toggleTask('${z.id}')">
-            ${z.done ? '✓' : ''}
-          </button>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:14px;font-weight:500;${z.done?'text-decoration:line-through':''}">${esc(z.tekst)}</div>
-            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;align-items:center;">
-              <span class="person-tag">👤 ${esc(z.osoba)}</span>
-              ${z.rok ? `<div class="date-chip ${z.done?'':''+dateChipClass(z.rok)}">📅 ${formatDate(z.rok)}${z.done?'':dateLabel(z.rok)}</div>` : ''}
-              ${proj ? `<div class="date-chip" style="color:var(--muted)">🏗 ${esc(proj.klijent)}</div>` : ''}
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <h2 class="bebas" id="modal-heading" style="margin-bottom:20px;">Novi Zadatak</h2>
+            <input type="hidden" id="task-id">
+            
+            <div class="form-group">
+                <label>Opis</label>
+                <input type="text" id="task-desc" placeholder="Šta treba uraditi?">
             </div>
-          </div>
-          <button class="btn btn-ghost btn-sm" onclick="deleteZadatak('${z.id}')" style="padding:6px 10px;min-width:36px;">✕</button>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-function renderOdlozeno() {
-  const active = data.odlozeno.filter(o => !o.resolved);
-  const resolved = data.odlozeno.filter(o => o.resolved);
-  const el = document.getElementById('odlList');
-  let html = '';
-
-  if (active.length === 0 && resolved.length === 0) {
-    html = '<div class="empty"><div class="empty-icon">⏸</div>Nema odloženih stvari!</div>';
-  } else {
-    if (active.length > 0) {
-      html += '<div class="section-title">ČEKA NEŠTO</div>';
-      active.sort((a,b) => (a.podsetnik||'9999').localeCompare(b.podsetnik||'9999'));
-      html += active.map(o => `
-        <div class="card priority-mid">
-          <div class="card-header">
-            <div style="flex:1;min-width:0;">
-              <div class="card-title">${esc(o.tekst)}</div>
-              ${o.klijent ? `<div class="card-sub">👤 ${esc(o.klijent)}</div>` : ''}
+            <div class="form-group">
+                <label>Kategorija</label>
+                <select id="task-cat"></select>
             </div>
-          </div>
-          ${o.ceka ? `<div class="waiting-for">⏳ Čeka: ${esc(o.ceka)}</div>` : ''}
-          <div class="card-dates">
-            ${o.podsetnik ? `<div class="date-chip ${dateChipClass(o.podsetnik)}">🔔 Podsetnik ${formatDate(o.podsetnik)}${dateLabel(o.podsetnik)}</div>` : ''}
-            ${o.rok ? `<div class="date-chip ${dateChipClass(o.rok)}">⏰ Rok ${formatDate(o.rok)}${dateLabel(o.rok)}</div>` : ''}
-          </div>
-          <div class="card-actions">
-            <button class="btn btn-ghost btn-sm" onclick="resolveOdlozeno('${o.id}')">✅ Rešeno</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteOdlozeno('${o.id}')">🗑</button>
-          </div>
+            <div style="display:flex; gap:10px;">
+                <div class="form-group" style="flex:1">
+                    <label>Rok</label>
+                    <input type="date" id="task-date">
+                </div>
+                <div class="form-group" style="flex:1">
+                    <label>Prioritet</label>
+                    <select id="task-priority">
+                        <option value="normal">Normalno</option>
+                        <option value="hitno">🚨 Hitno</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn-save" onclick="app.saveTask()">SAČUVAJ</button>
+            <a href="#" class="btn-cancel" onclick="ui.closeModal()">Odustani</a>
+            <button id="del-btn" style="display:none; background:none; border:none; color:red; width:100%; margin-top:20px;" onclick="app.deleteTask()">Obriši zadatak</button>
         </div>
-      `).join('');
-    }
-    if (resolved.length > 0) {
-      html += '<div class="section-title" style="margin-top:20px;">REŠENO</div>';
-      html += resolved.slice(-5).reverse().map(o => `
-        <div class="card" style="opacity:0.4">
-          <div style="font-size:13px;text-decoration:line-through;">${esc(o.tekst)}</div>
-          <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="deleteOdlozeno('${o.id}')">Ukloni</button>
-        </div>
-      `).join('');
-    }
-  }
-  el.innerHTML = html;
-}
-
-// ===== CALENDAR =====
-function renderCalendar() {
-  const year = calDate.getFullYear();
-  const month = calDate.getMonth();
-  const months = ['Januar','Februar','Mart','April','Maj','Jun','Jul','Avgust','Septembar','Oktobar','Novembar','Decembar'];
-  document.getElementById('calTitle').textContent = `${months[month]} ${year}`;
-
-  const first = new Date(year, month, 1);
-  const last = new Date(year, month+1, 0);
-  const startDay = (first.getDay() + 6) % 7;
-  const dayLabels = ['Po','Ut','Sr','Če','Pe','Su','Ne'];
-  let grid = dayLabels.map(d => `<div class="cal-day-label">${d}</div>`).join('');
-
-  const eventDates = new Set();
-  const prefix = `${year}-${String(month+1).padStart(2,'0')}`;
-
-  data.projekti.forEach(p => {
-    if (p.isporuka && p.isporuka.startsWith(prefix)) eventDates.add(parseInt(p.isporuka.split('-')[2]));
-    if (p.montaza && p.montaza.startsWith(prefix)) eventDates.add(parseInt(p.montaza.split('-')[2]));
-  });
-  data.zadaci.forEach(z => {
-    if (z.rok && z.rok.startsWith(prefix)) eventDates.add(parseInt(z.rok.split('-')[2]));
-  });
-  data.odlozeno.forEach(o => {
-    if (o.podsetnik && o.podsetnik.startsWith(prefix)) eventDates.add(parseInt(o.podsetnik.split('-')[2]));
-  });
-
-  const todayD = new Date();
-  const isThisMonth = todayD.getFullYear() === year && todayD.getMonth() === month;
-
-  for (let i = 0; i < startDay; i++) grid += '<div class="cal-day other-month"></div>';
-  for (let d = 1; d <= last.getDate(); d++) {
-    const isToday = isThisMonth && todayD.getDate() === d;
-    const hasEv = eventDates.has(d);
-    grid += `<div class="cal-day ${isToday?'today':''} ${hasEv?'has-event':''}" onclick="calDayClick(${year},${month},${d})">${d}</div>`;
-  }
-  document.getElementById('calGrid').innerHTML = grid;
-  renderCalEvents(year, month);
-}
-
-function renderCalEvents(year, month) {
-  const prefix = `${year}-${String(month+1).padStart(2,'0')}`;
-  let events = [];
-
-  data.projekti.forEach(p => {
-    if (p.isporuka && p.isporuka.startsWith(prefix))
-      events.push({ date: p.isporuka, icon: '📦', text: `Isporuka: ${esc(p.klijent)}` });
-    if (p.montaza && p.montaza.startsWith(prefix))
-      events.push({ date: p.montaza, icon: '🔧', text: `Montaža: ${esc(p.klijent)}` });
-  });
-  data.zadaci.filter(z => !z.done).forEach(z => {
-    if (z.rok && z.rok.startsWith(prefix))
-      events.push({ date: z.rok, icon: '✅', text: `${esc(z.tekst)} (${esc(z.osoba)})` });
-  });
-  data.odlozeno.filter(o => !o.resolved).forEach(o => {
-    if (o.podsetnik && o.podsetnik.startsWith(prefix))
-      events.push({ date: o.podsetnik, icon: '🔔', text: `Proveri: ${esc(o.tekst)}` });
-  });
-  events.sort((a,b) => a.date.localeCompare(b.date));
-
-  const el = document.getElementById('calEventList');
-  if (events.length === 0) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">📅</div>Nema zakazanih stavki ovaj mesec</div>';
-    return;
-  }
-  el.innerHTML = events.map(e => `
-    <div class="card" style="display:flex;align-items:center;gap:12px;">
-      <span style="font-size:20px;">${e.icon}</span>
-      <div>
-        <div style="font-size:13px;font-weight:500;">${e.text}</div>
-        <div class="date-chip ${dateChipClass(e.date)}" style="display:inline-flex;margin-top:4px;">
-          📅 ${formatDate(e.date)}${dateLabel(e.date)}
-        </div>
-      </div>
     </div>
-  `).join('');
-}
 
-function calMove(dir) {
-  calDate.setMonth(calDate.getMonth() + dir);
-  renderCalendar();
-}
+    <script>
+        // --- DATA ---
+        const CATS = {
+            upiti: { n: 'Upiti & Ponude', i: '📧', c: '#3498db' },
+            projekti: { n: 'Projekti & Montaža', i: '🏗️', c: '#e67e22' },
+            obilazak: { n: 'Obilazak', i: '🚗', c: '#2ecc71' },
+            dobavljaci: { n: 'Dobavljači', i: '📦', c: '#9b59b6' },
+            proizvodnja: { n: 'Proizvodnja', i: '⚙️', c: '#95a5a6' },
+            finansije: { n: 'Finansije', i: '💰', c: '#f1c40f' },
+            vozila: { n: 'Vozni park', i: '🚚', c: '#e74c3c' },
+            marketing: { n: 'Marketing', i: '📢', c: '#1abc9c' },
+            opsti: { n: 'Opšte', i: '📝', c: '#7f8c8d' }
+        };
 
-function calDayClick(y, m, d) {
-  const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-  document.getElementById('p_isporuka').value = dateStr;
-  openModal('fabMenu');
-}
+        let tasks = JSON.parse(localStorage.getItem('pro_tasks')) || [];
+        let currentPage = 'timeline';
+        let currentCat = null;
+        let timelineFilter = 'sve';
 
-// ===== NOTIFICATIONS =====
-function requestNotif() {
-  if (!('Notification' in window)) {
-    showSnack('Browser ne podržava notifikacije.');
-    return;
-  }
-  Notification.requestPermission().then(p => {
-    if (p === 'granted') {
-      showSnack('Podsetnici uključeni! ✅');
-      checkNotifications();
-    } else {
-      showSnack('Dozvola odbijena.');
-    }
-  });
-}
+        // --- APP LOGIC ---
+        const app = {
+            setPage(page, cat = null) {
+                currentPage = page;
+                currentCat = cat;
+                document.querySelectorAll('.nav-item').forEach((el, i) => {
+                    el.classList.toggle('active', (page === 'timeline' && i === 0) || ((page === 'categories' || page === 'category') && i === 1) || (page === 'archive' && i === 2));
+                });
+                this.render();
+            },
 
-function checkNotifications() {
-  if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
-  const t = today();
-  data.projekti.forEach(p => {
-    if (p.isporuka === t) new Notification(`📦 Isporuka danas: ${p.klijent}`, { icon: 'icon-192.png' });
-    if (p.montaza === t) new Notification(`🔧 Montaža danas: ${p.klijent}`, { icon: 'icon-192.png' });
-  });
-  data.zadaci.filter(z => !z.done).forEach(z => {
-    if (z.rok === t) new Notification(`✅ Zadatak danas: ${z.tekst}`, { body: `Osoba: ${z.osoba}`, icon: 'icon-192.png' });
-  });
-  data.odlozeno.filter(o => !o.resolved).forEach(o => {
-    if (o.podsetnik === t) new Notification(`⏸ Proveri: ${o.tekst}`, { body: o.klijent, icon: 'icon-192.png' });
-  });
-}
+            saveTask() {
+                const desc = document.getElementById('task-desc').value;
+                if (!desc) return;
+                const id = document.getElementById('task-id').value;
+                const task = {
+                    id: id || Date.now().toString(),
+                    desc,
+                    cat: document.getElementById('task-cat').value,
+                    date: document.getElementById('task-date').value,
+                    priority: document.getElementById('task-priority').value,
+                    done: false
+                };
+                if (id) {
+                    const idx = tasks.findIndex(t => t.id === id);
+                    task.done = tasks[idx].done;
+                    tasks[idx] = task;
+                } else {
+                    tasks.push(task);
+                }
+                this.sync();
+                ui.closeModal();
+            },
 
-// ===== INIT =====
-loadData();
-updateBadge();
-checkNotifications();
-setInterval(checkNotifications, 3600000);
-</script>
+            toggleTask(id, e) {
+                e.stopPropagation();
+                const t = tasks.find(x => x.id === id);
+                t.done = !t.done;
+                this.sync();
+            },
+
+            deleteTask() {
+                if (!confirm('Obriši?')) return;
+                const id = document.getElementById('task-id').value;
+                tasks = tasks.filter(t => t.id !== id);
+                this.sync();
+                ui.closeModal();
+            },
+
+            sync() {
+                localStorage.setItem('pro_tasks', JSON.stringify(tasks));
+                this.render();
+            },
+
+            render() {
+                const shell = document.getElementById('app-shell');
+                const title = document.getElementById('header-title');
+                const count = document.getElementById('total-count');
+                count.innerText = tasks.filter(t => !t.done).length;
+                shell.innerHTML = '';
+
+                if (currentPage === 'timeline') {
+                    title.innerText = 'TIMELINE';
+                    this.renderTimeline(shell);
+                } else if (currentPage === 'categories') {
+                    title.innerText = 'KATEGORIJE';
+                    this.renderGrid(shell);
+                } else if (currentPage === 'category') {
+                    title.innerText = CATS[currentCat].n.toUpperCase();
+                    this.renderCategory(shell);
+                } else if (currentPage === 'archive') {
+                    title.innerText = 'ARHIVA';
+                    this.renderArchive(shell);
+                }
+            },
+
+            renderTimeline(el) {
+                const today = new Date().toISOString().split('T')[0];
+                let active = tasks.filter(t => !t.done && t.date);
+                
+                if(timelineFilter === 'danas') active = active.filter(t => t.date === today);
+                if(timelineFilter === 'hitno') active = active.filter(t => t.priority === 'hitno');
+
+                el.innerHTML = `
+                    <div class="filters">
+                        <div class="filter-btn ${timelineFilter==='sve'?'active':''}" onclick="app.setFilter('sve')">Sve</div>
+                        <div class="filter-btn ${timelineFilter==='danas'?'active':''}" onclick="app.setFilter('danas')">Danas</div>
+                        <div class="filter-btn ${timelineFilter==='hitno'?'active':''}" onclick="app.setFilter('hitno')">🚨 Hitno</div>
+                    </div>
+                `;
+
+                const overdue = active.filter(t => t.date < today);
+                const isToday = active.filter(t => t.date === today);
+                const upcoming = active.filter(t => t.date > today);
+
+                if (overdue.length) el.innerHTML += `<div class="section-title bebas">KASNI</div>` + overdue.map(t => this.taskHTML(t)).join('');
+                if (isToday.length) el.innerHTML += `<div class="section-title bebas">DANAS</div>` + isToday.map(t => this.taskHTML(t)).join('');
+                if (upcoming.length) el.innerHTML += `<div class="section-title bebas">USKORO</div>` + upcoming.map(t => this.taskHTML(t)).join('');
+                
+                if (!active.length) el.innerHTML += `<div style="text-align:center; padding:40px; color:var(--muted)">Nema zadataka sa rokom.</div>`;
+            },
+
+            renderGrid(el) {
+                let html = '<div class="grid">';
+                for (let k in CATS) {
+                    const c = tasks.filter(t => t.cat === k && !t.done).length;
+                    html += `
+                        <div class="cat-card" onclick="app.setPage('category', '${k}')">
+                            ${c > 0 ? `<div class="cat-badge">${c}</div>` : ''}
+                            <i>${CATS[k].i}</i>
+                            <div class="cat-name">${CATS[k].n}</div>
+                        </div>`;
+                }
+                el.innerHTML = html + '</div>';
+            },
+
+            renderCategory(el) {
+                const catTasks = tasks.filter(t => t.cat === currentCat && !t.done);
+                el.innerHTML = catTasks.length ? catTasks.map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:40px; color:var(--muted)">Kategorija je prazna.</div>';
+            },
+
+            renderArchive(el) {
+                const done = tasks.filter(t => t.done);
+                el.innerHTML = done.length ? done.slice(-30).reverse().map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:40px; color:var(--muted)">Arhiva je prazna.</div>';
+            },
+
+            setFilter(f) { timelineFilter = f; this.render(); },
+
+            taskHTML(t) {
+                const today = new Date().toISOString().split('T')[0];
+                const dateStatus = t.date < today ? 'overdue' : (t.date === today ? 'today' : '');
+                return `
+                    <div class="task-card" style="border-left-color:${CATS[t.cat].c}; opacity:${t.done?0.5:1}" onclick="ui.openModal('${t.id}')">
+                        <div style="display:flex; justify-content:space-between;">
+                            <div class="task-desc" style="${t.done?'text-decoration:line-through':''}">${t.desc}</div>
+                            <input type="checkbox" ${t.done?'checked':''} onclick="app.toggleTask('${t.id}', event)">
+                        </div>
+                        <div class="task-meta">
+                            <span>${CATS[t.cat].i} ${CATS[t.cat].n}</span>
+                            ${t.date ? `<span class="date-badge ${dateStatus}">${t.date.split('-')[2]}.${t.date.split('-')[1]}.</span>` : ''}
+                            ${t.priority === 'hitno' ? `<span class="priority-hitno">🚨 HITNO</span>` : ''}
+                        </div>
+                    </div>`;
+            }
+        };
+
+        // --- UI UI ---
+        const ui = {
+            openModal(id = null) {
+                const catSel = document.getElementById('task-cat');
+                catSel.innerHTML = Object.entries(CATS).map(([k,v]) => `<option value="${k}" ${currentCat===k?'selected':''}>${v.i} ${v.n}</option>`).join('');
+                
+                if (id) {
+                    const t = tasks.find(x => x.id === id);
+                    document.getElementById('task-id').value = t.id;
+                    document.getElementById('task-desc').value = t.desc;
+                    document.getElementById('task-cat').value = t.cat;
+                    document.getElementById('task-date').value = t.date;
+                    document.getElementById('task-priority').value = t.priority;
+                    document.getElementById('modal-heading').innerText = 'Izmeni Zadatak';
+                    document.getElementById('del-btn').style.display = 'block';
+                } else {
+                    document.getElementById('task-id').value = '';
+                    document.getElementById('task-desc').value = '';
+                    document.getElementById('task-date').value = '';
+                    document.getElementById('task-priority').value = 'normal';
+                    document.getElementById('modal-heading').innerText = 'Novi Zadatak';
+                    document.getElementById('del-btn').style.display = 'none';
+                }
+                document.getElementById('modal-overlay').classList.add('open');
+            },
+            closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+        };
+
+        // Init
+        app.render();
+
+        // PWA Registracija
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(console.error);
+            });
+        }
+    </script>
 </body>
 </html>
