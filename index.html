@@ -2,7 +2,7 @@
 <html lang="sr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>PROHORECA | Podsetnik</title>
     
     <!-- PWA Meta Tagovi -->
@@ -37,6 +37,7 @@
             --cat-opsti: #7f8c8d;
 
             --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-top: env(safe-area-inset-top, 0px);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -48,13 +49,15 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
 
         /* HEADER */
         header {
-            padding: 20px 20px 10px;
+            padding: calc(20px + var(--safe-top)) 20px 10px;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             display: flex;
@@ -72,10 +75,11 @@
         main {
             flex: 1;
             overflow-y: auto;
-            padding: 15px 15px 100px;
+            padding: 15px 15px 120px;
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* NAVIGATION */
+        /* NAVIGATION BAR */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -87,7 +91,7 @@
             border-top: 1px solid var(--border);
             display: flex;
             padding: 10px 0 calc(10px + var(--safe-bottom));
-            z-index: 90;
+            z-index: 200;
         }
 
         .nav-item {
@@ -97,76 +101,116 @@
             font-size: 10px;
             font-weight: 600;
             cursor: pointer;
+            transition: color 0.2s;
         }
         .nav-item.active { color: var(--accent); }
-        .nav-icon { font-size: 20px; display: block; margin-bottom: 2px; }
+        .nav-icon { font-size: 22px; display: block; margin-bottom: 2px; }
 
         /* FAB */
         .fab {
             position: fixed;
-            bottom: calc(80px + var(--safe-bottom));
+            bottom: calc(85px + var(--safe-bottom));
             right: 20px;
-            width: 56px;
-            height: 56px;
+            width: 60px;
+            height: 60px;
             background: var(--accent);
-            border-radius: 18px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 32px;
             color: #000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
             border: none;
             cursor: pointer;
-            z-index: 80;
+            z-index: 150;
+            transition: transform 0.1s;
         }
+        .fab:active { transform: scale(0.9); }
 
-        /* CARDS */
+        /* TASK CARDS */
         .task-card {
             background: var(--card);
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 14px;
+            padding: 16px;
             margin-bottom: 12px;
-            border-left: 5px solid transparent;
-            position: relative;
+            border-left: 6px solid transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s ease;
         }
-        .task-desc { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
-        .task-meta { font-size: 12px; color: var(--muted); display: flex; gap: 12px; align-items: center; }
-        .priority-hitno { color: #ff4757; font-weight: bold; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } }
+
+        .task-info { flex: 1; padding-right: 15px; }
+        .task-desc { font-size: 16px; font-weight: 500; margin-bottom: 6px; line-height: 1.3; }
+        .task-meta { font-size: 11px; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
         
+        /* CHECKBOX STYLING - FIX ZA VELIČINU */
+        input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 28px !important;
+            height: 28px !important;
+            background: #2a2a2e;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0; /* Ne dozvoljava checkbox-u da se skupi ili rastegne */
+            transition: all 0.2s;
+        }
+        input[type="checkbox"]:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+        input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: black;
+            font-size: 18px;
+            font-weight: bold;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
         .date-badge {
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 3px 7px;
+            border-radius: 5px;
             font-weight: 600;
-            font-size: 11px;
+            font-size: 10px;
             background: var(--border);
         }
-        .overdue { background: #e74c3c; color: white; }
-        .today { background: #f5a623; color: black; }
+        .overdue { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+        .today { background: rgba(245, 166, 35, 0.2); color: #f5a623; border: 1px solid #f5a623; }
 
-        /* GRID */
+        /* GRID KATEGORIJE */
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 12px;
         }
         .cat-card {
             background: var(--card);
             border: 1px solid var(--border);
-            padding: 15px 5px;
-            border-radius: 15px;
+            padding: 20px 5px;
+            border-radius: 18px;
             text-align: center;
             position: relative;
+            cursor: pointer;
         }
-        .cat-card i { font-size: 24px; display: block; margin-bottom: 8px; }
+        .cat-card i { font-size: 28px; display: block; margin-bottom: 8px; }
         .cat-name { font-size: 10px; font-weight: bold; text-transform: uppercase; color: var(--muted); }
-        .cat-badge { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #000; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
+        .cat-badge { position: absolute; top: -6px; right: -6px; background: var(--accent); color: #000; font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 800; border: 2px solid var(--bg); }
 
-        /* MODAL */
+        /* MODAL POP-UP */
         .modal-overlay {
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
             display: none;
             align-items: flex-end;
             z-index: 1000;
@@ -175,25 +219,39 @@
         .modal {
             background: var(--surface);
             width: 100%;
-            border-radius: 25px 25px 0 0;
-            padding: 25px;
-            padding-bottom: calc(30px + var(--safe-bottom));
+            max-width: 500px;
+            margin: 0 auto;
+            border-radius: 30px 30px 0 0;
+            padding: 30px 25px calc(35px + var(--safe-bottom));
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; }
-        input, select, textarea {
-            width: 100%; background: var(--card); border: 1px solid var(--border);
-            color: white; padding: 12px; border-radius: 10px; font-size: 16px;
-        }
-        .btn-save { background: var(--accent); color: black; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; margin-top: 10px; }
-        .btn-cancel { color: var(--muted); text-align: center; display: block; margin-top: 15px; font-size: 14px; text-decoration: none; }
-        
-        /* FILTERS */
-        .filters { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 5px; }
-        .filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 6px 15px; border-radius: 20px; font-size: 12px; white-space: nowrap; }
-        .filter-btn.active { background: var(--accent); color: black; border-color: var(--accent); }
+        .modal-overlay.open .modal { transform: translateY(0); }
 
-        .section-title { font-size: 14px; color: var(--accent); margin: 20px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; font-weight: 600; }
+        
+        /* FIX ZA INPUTE DA NE BUDU OGROMNI */
+        input:not([type="checkbox"]), select, textarea {
+            width: 100%; 
+            background: var(--card); 
+            border: 1px solid var(--border);
+            color: white; 
+            padding: 14px; 
+            border-radius: 12px; 
+            font-size: 16px; /* 16px sprečava auto-zoom na iPhone-u */
+            font-family: inherit;
+        }
+
+        .btn-save { background: var(--accent); color: black; width: 100%; padding: 16px; border: none; border-radius: 14px; font-weight: bold; font-size: 17px; margin-top: 10px; cursor: pointer; }
+        .btn-cancel { color: var(--muted); text-align: center; display: block; margin-top: 20px; font-size: 14px; text-decoration: none; font-weight: 500; }
+        
+        .filters { display: flex; gap: 10px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; scrollbar-width: none; }
+        .filters::-webkit-scrollbar { display: none; }
+        .filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 18px; border-radius: 20px; font-size: 13px; white-space: nowrap; cursor: pointer; }
+        .filter-btn.active { background: var(--accent); color: black; border-color: var(--accent); font-weight: bold; }
+
+        .section-title { font-size: 14px; color: var(--accent); margin: 25px 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
@@ -220,35 +278,35 @@
     <button class="fab" onclick="ui.openModal()">+</button>
 
     <!-- MODAL -->
-    <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-overlay" id="modal-overlay" onclick="if(event.target === this) ui.closeModal()">
         <div class="modal">
-            <h2 class="bebas" id="modal-heading" style="margin-bottom:20px;">Novi Zadatak</h2>
+            <h2 class="bebas" id="modal-heading" style="margin-bottom:20px; color:var(--accent);">Novi Zadatak</h2>
             <input type="hidden" id="task-id">
             
             <div class="form-group">
-                <label>Opis</label>
-                <input type="text" id="task-desc" placeholder="Šta treba uraditi?">
+                <label>Opis zadatka</label>
+                <input type="text" id="task-desc" placeholder="Npr. Montaža pergole Petrović">
             </div>
             <div class="form-group">
                 <label>Kategorija</label>
                 <select id="task-cat"></select>
             </div>
-            <div style="display:flex; gap:10px;">
+            <div style="display:flex; gap:12px;">
                 <div class="form-group" style="flex:1">
-                    <label>Rok</label>
+                    <label>Rok (opciono)</label>
                     <input type="date" id="task-date">
                 </div>
                 <div class="form-group" style="flex:1">
                     <label>Prioritet</label>
                     <select id="task-priority">
                         <option value="normal">Normalno</option>
-                        <option value="hitno">🚨 Hitno</option>
+                        <option value="hitno">🚨 HITNO</option>
                     </select>
                 </div>
             </div>
             <button class="btn-save" onclick="app.saveTask()">SAČUVAJ</button>
-            <a href="#" class="btn-cancel" onclick="ui.closeModal()">Odustani</a>
-            <button id="del-btn" style="display:none; background:none; border:none; color:red; width:100%; margin-top:20px;" onclick="app.deleteTask()">Obriši zadatak</button>
+            <a href="#" class="btn-cancel" onclick="ui.closeModal()">Zatvori</a>
+            <button id="del-btn" style="display:none; background:none; border:none; color:#e74c3c; width:100%; margin-top:25px; font-weight:600; cursor:pointer;" onclick="app.deleteTask()">🗑 Obriši zadatak trajno</button>
         </div>
     </div>
 
@@ -283,7 +341,7 @@
             },
 
             saveTask() {
-                const desc = document.getElementById('task-desc').value;
+                const desc = document.getElementById('task-desc').value.trim();
                 if (!desc) return;
                 const id = document.getElementById('task-id').value;
                 const task = {
@@ -313,7 +371,7 @@
             },
 
             deleteTask() {
-                if (!confirm('Obriši?')) return;
+                if (!confirm('Da li ste sigurni da želite da obrišete ovaj zadatak?')) return;
                 const id = document.getElementById('task-id').value;
                 tasks = tasks.filter(t => t.id !== id);
                 this.sync();
@@ -356,21 +414,21 @@
 
                 el.innerHTML = `
                     <div class="filters">
-                        <div class="filter-btn ${timelineFilter==='sve'?'active':''}" onclick="app.setFilter('sve')">Sve</div>
+                        <div class="filter-btn ${timelineFilter==='sve'?'active':''}" onclick="app.setFilter('sve')">Sve zadatke</div>
                         <div class="filter-btn ${timelineFilter==='danas'?'active':''}" onclick="app.setFilter('danas')">Danas</div>
                         <div class="filter-btn ${timelineFilter==='hitno'?'active':''}" onclick="app.setFilter('hitno')">🚨 Hitno</div>
                     </div>
                 `;
 
-                const overdue = active.filter(t => t.date < today);
+                const overdue = active.filter(t => t.date < today).sort((a,b) => a.date > b.date ? 1 : -1);
                 const isToday = active.filter(t => t.date === today);
-                const upcoming = active.filter(t => t.date > today);
+                const upcoming = active.filter(t => t.date > today).sort((a,b) => a.date > b.date ? 1 : -1);
 
-                if (overdue.length) el.innerHTML += `<div class="section-title bebas">KASNI</div>` + overdue.map(t => this.taskHTML(t)).join('');
+                if (overdue.length) el.innerHTML += `<div class="section-title bebas">ISTEKLO</div>` + overdue.map(t => this.taskHTML(t)).join('');
                 if (isToday.length) el.innerHTML += `<div class="section-title bebas">DANAS</div>` + isToday.map(t => this.taskHTML(t)).join('');
                 if (upcoming.length) el.innerHTML += `<div class="section-title bebas">USKORO</div>` + upcoming.map(t => this.taskHTML(t)).join('');
                 
-                if (!active.length) el.innerHTML += `<div style="text-align:center; padding:40px; color:var(--muted)">Nema zadataka sa rokom.</div>`;
+                if (!active.length) el.innerHTML += `<div style="text-align:center; padding:60px 20px; color:var(--muted); font-size:14px;">Nema planiranih zadataka za ovaj filter.</div>`;
             },
 
             renderGrid(el) {
@@ -389,12 +447,12 @@
 
             renderCategory(el) {
                 const catTasks = tasks.filter(t => t.cat === currentCat && !t.done);
-                el.innerHTML = catTasks.length ? catTasks.map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:40px; color:var(--muted)">Kategorija je prazna.</div>';
+                el.innerHTML = catTasks.length ? catTasks.map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:60px; color:var(--muted)">Sve je završeno u ovoj kategoriji! 🥳</div>';
             },
 
             renderArchive(el) {
                 const done = tasks.filter(t => t.done);
-                el.innerHTML = done.length ? done.slice(-30).reverse().map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:40px; color:var(--muted)">Arhiva je prazna.</div>';
+                el.innerHTML = done.length ? `<div class="section-title bebas">ZAVRŠENI ZADACI</div>` + done.slice(-40).reverse().map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:60px; color:var(--muted)">Nema ništa u arhivi.</div>';
             },
 
             setFilter(f) { timelineFilter = f; this.render(); },
@@ -404,20 +462,20 @@
                 const dateStatus = t.date < today ? 'overdue' : (t.date === today ? 'today' : '');
                 return `
                     <div class="task-card" style="border-left-color:${CATS[t.cat].c}; opacity:${t.done?0.5:1}" onclick="ui.openModal('${t.id}')">
-                        <div style="display:flex; justify-content:space-between;">
-                            <div class="task-desc" style="${t.done?'text-decoration:line-through':''}">${t.desc}</div>
-                            <input type="checkbox" ${t.done?'checked':''} onclick="app.toggleTask('${t.id}', event)">
+                        <div class="task-info">
+                            <div class="task-desc" style="${t.done?'text-decoration:line-through; color:var(--muted)':''}">${t.desc}</div>
+                            <div class="task-meta">
+                                <span>${CATS[t.cat].i} ${CATS[t.cat].n}</span>
+                                ${t.date ? `<span class="date-badge ${dateStatus}">${t.date.split('-')[2]}.${t.date.split('-')[1]}.</span>` : ''}
+                                ${t.priority === 'hitno' ? `<span style="color:#e74c3c; font-weight:bold;">🚨 HITNO</span>` : ''}
+                            </div>
                         </div>
-                        <div class="task-meta">
-                            <span>${CATS[t.cat].i} ${CATS[t.cat].n}</span>
-                            ${t.date ? `<span class="date-badge ${dateStatus}">${t.date.split('-')[2]}.${t.date.split('-')[1]}.</span>` : ''}
-                            ${t.priority === 'hitno' ? `<span class="priority-hitno">🚨 HITNO</span>` : ''}
-                        </div>
+                        <input type="checkbox" ${t.done?'checked':''} onclick="app.toggleTask('${t.id}', event)">
                     </div>`;
             }
         };
 
-        // --- UI UI ---
+        // --- UI ---
         const ui = {
             openModal(id = null) {
                 const catSel = document.getElementById('task-cat');
@@ -430,14 +488,14 @@
                     document.getElementById('task-cat').value = t.cat;
                     document.getElementById('task-date').value = t.date;
                     document.getElementById('task-priority').value = t.priority;
-                    document.getElementById('modal-heading').innerText = 'Izmeni Zadatak';
+                    document.getElementById('modal-heading').innerText = 'Izmeni zadatak';
                     document.getElementById('del-btn').style.display = 'block';
                 } else {
                     document.getElementById('task-id').value = '';
                     document.getElementById('task-desc').value = '';
                     document.getElementById('task-date').value = '';
                     document.getElementById('task-priority').value = 'normal';
-                    document.getElementById('modal-heading').innerText = 'Novi Zadatak';
+                    document.getElementById('modal-heading').innerText = 'Novi zadatak';
                     document.getElementById('del-btn').style.display = 'none';
                 }
                 document.getElementById('modal-overlay').classList.add('open');
