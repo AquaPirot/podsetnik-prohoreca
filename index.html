@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PROHORECA | Ultra</title>
+    <title>PROHORECA | Professional</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0e0e0f">
@@ -14,24 +14,23 @@
     
     <style>
         :root {
-            --bg: #09090b;
-            --surface: rgba(22, 22, 24, 0.8);
-            --card: rgba(30, 30, 33, 0.7);
-            --border: rgba(255, 255, 255, 0.1);
+            --bg: #0e0e10;
+            --surface: #161618;
+            --card: #1c1c1f; /* Čvrsta boja, nema više providnosti */
+            --border: #27272a;
             --accent: #f5a623;
             --text: #f4f4f5;
-            --muted: #a1a1aa;
+            --muted: #71717a;
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --safe-top: env(safe-area-inset-top, 0px);
             --green: #10b981;
             --red: #ef4444;
-            --blue: #3b82f6;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         
         body {
-            background: radial-gradient(circle at top right, #1c1c1f, #09090b);
+            background-color: var(--bg);
             color: var(--text);
             font-family: 'IBM Plex Sans', sans-serif;
             overflow: hidden;
@@ -40,14 +39,11 @@
             flex-direction: column;
         }
 
-        .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; }
+        .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
 
-        /* --- HEADER --- */
         header {
-            padding: calc(20px + var(--safe-top)) 20px 15px;
+            padding: calc(18px + var(--safe-top)) 20px 12px;
             background: var(--surface);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
@@ -55,37 +51,38 @@
             z-index: 100;
         }
 
-        .logo { font-size: 24px; color: var(--accent); text-shadow: 0 0 15px rgba(245, 166, 35, 0.3); }
-        .header-btns { display: flex; gap: 15px; align-items: center; }
+        .logo { font-size: 22px; color: var(--accent); }
+        .global-badge { background: var(--accent); color: #000; padding: 2px 8px; border-radius: 12px; font-weight: 800; font-size: 11px; }
 
-        main { flex: 1; overflow-y: auto; padding: 15px 15px 130px; position: relative; scroll-behavior: smooth; }
+        main { flex: 1; overflow-y: auto; padding: 15px 15px 120px; position: relative; }
 
-        /* --- TASK CONTAINER & MODERN CARDS --- */
+        /* --- TASK CONTAINER --- */
         .task-container {
             position: relative;
-            margin-bottom: 15px;
-            border-radius: 16px;
+            margin-bottom: 10px;
+            border-radius: 12px;
             overflow: hidden;
-            background: #000;
+            background: #000; /* Crna pozadina ispod kartice */
         }
 
+        /* Boje ispod koje se vide samo pri swipe-u */
         .swipe-action {
             position: absolute;
             top: 0; bottom: 0; width: 100%;
             display: flex; align-items: center;
-            padding: 0 25px; font-weight: 700; font-size: 13px;
+            padding: 0 25px; font-weight: 700; font-size: 12px;
             color: white; z-index: 1;
+            opacity: 0; /* Sakriveno dok ne krene swipe */
+            transition: opacity 0.2s;
         }
         .swipe-done { background: var(--green); justify-content: flex-start; }
         .swipe-delete { background: var(--red); justify-content: flex-end; }
 
         .task-card {
-            background: var(--card);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 18px;
+            background: var(--card); /* Puna boja, ne providi se */
+            padding: 16px;
             border: 1px solid var(--border);
-            border-left: 5px solid #555;
+            border-left: 4px solid #3f3f46;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -95,92 +92,78 @@
         }
 
         .task-info { flex: 1; padding-right: 10px; }
-        .task-desc { font-size: 16px; font-weight: 500; margin-bottom: 6px; line-height: 1.4; color: #fff; }
+        .task-desc { font-size: 15px; font-weight: 500; margin-bottom: 4px; line-height: 1.4; color: #ececec; }
         .task-meta { font-size: 11px; color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
-        /* --- CONTACT & UTILS --- */
-        .contact-btns { display: flex; gap: 10px; align-items: center; }
+        /* --- CONTACT BUTTONS --- */
+        .contact-btns { display: flex; gap: 8px; align-items: center; }
         .c-btn {
-            width: 40px; height: 40px; border-radius: 12px;
+            width: 36px; height: 36px; border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
-            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-            text-decoration: none; font-size: 18px; transition: 0.2s;
+            background: #27272a; border: 1px solid var(--border);
+            text-decoration: none; font-size: 16px;
         }
-        .c-wa { color: #25D366; }
+        .c-wa { color: #22c55e; }
         .c-tel { color: #3b82f6; }
-        .c-restore { color: var(--accent); font-size: 20px; }
+        .c-restore { color: var(--accent); }
 
-        /* --- CHECKBOX --- */
-        .checkbox-container { width: 30px; height: 30px; flex-shrink: 0; margin-left: 5px; }
+        /* --- CHECKBOX (Small & Clean) --- */
+        .checkbox-container { width: 28px; height: 28px; flex-shrink: 0; margin-left: 4px; }
         input[type="checkbox"] {
-            all: unset !important; width: 26px !important; height: 26px !important;
-            background-color: rgba(255,255,255,0.1) !important; border: 1px solid var(--border) !important;
-            border-radius: 8px !important; position: relative !important; display: block !important;
+            all: unset !important; width: 24px !important; height: 24px !important;
+            background-color: #27272a !important; border: 1px solid var(--border) !important;
+            border-radius: 6px !important; position: relative !important; display: block !important;
         }
         input[type="checkbox"]:checked { background-color: var(--green) !important; border-color: var(--green) !important; }
-        input[type="checkbox"]:checked::after { content: '✓' !important; position: absolute !important; color: #000; font-size: 18px; font-weight: bold; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+        input[type="checkbox"]:checked::after { content: '✓' !important; position: absolute !important; color: #000; font-size: 16px; font-weight: bold; left: 50%; top: 50%; transform: translate(-50%, -50%); }
 
-        /* --- NAVIGATION --- */
+        /* --- BOTTOM NAV --- */
         .bottom-nav {
             position: fixed; bottom: 0; width: 100%; max-width: 500px; left: 50%; transform: translateX(-50%);
-            background: var(--surface); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border);
-            display: flex; padding: 12px 0 calc(12px + var(--safe-bottom)); z-index: 200;
+            background: var(--surface); border-top: 1px solid var(--border);
+            display: flex; padding: 10px 0 calc(10px + var(--safe-bottom)); z-index: 200;
         }
-        .nav-item { flex: 1; text-align: center; color: var(--muted); font-size: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { color: var(--accent); transform: translateY(-2px); }
-        .nav-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+        .nav-item { flex: 1; text-align: center; color: var(--muted); font-size: 10px; font-weight: 600; cursor: pointer; }
+        .nav-item.active { color: var(--accent); }
+        .nav-icon { font-size: 20px; display: block; margin-bottom: 4px; }
 
         .fab {
-            position: fixed; bottom: calc(90px + var(--safe-bottom)); right: 20px;
-            width: 64px; height: 64px; background: linear-gradient(135deg, var(--accent), #e67e22);
-            border-radius: 22px; display: flex; align-items: center; justify-content: center;
-            font-size: 35px; color: #000; border: none; z-index: 150; 
-            box-shadow: 0 10px 25px rgba(230, 126, 34, 0.4);
+            position: fixed; bottom: calc(85px + var(--safe-bottom)); right: 20px;
+            width: 58px; height: 58px; background: var(--accent); border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px; color: #000; border: none; z-index: 150; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
-        /* --- MODALS --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: none; align-items: flex-end; z-index: 1000; }
+        /* --- MODAL --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: flex-end; z-index: 1000; }
         .modal-overlay.open { display: flex; }
-        .modal { 
-            background: #161618; width: 100%; max-width: 500px; margin: 0 auto; 
-            border-radius: 32px 32px 0 0; padding: 35px 25px calc(40px + var(--safe-bottom));
-            border-top: 1px solid var(--border);
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
-        }
-        input:not([type="checkbox"]), select, textarea { 
-            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
-            color: white; padding: 15px; border-radius: 14px; font-size: 16px; margin-bottom: 15px;
-        }
-        .btn-save { background: var(--accent); color: black; width: 100%; padding: 18px; border: none; border-radius: 16px; font-weight: 700; font-size: 17px; }
+        .modal { background: var(--surface); width: 100%; max-width: 500px; margin: 0 auto; border-radius: 24px 24px 0 0; padding: 25px 20px calc(30px + var(--safe-bottom)); }
+        input:not([type="checkbox"]), select, textarea { width: 100%; background: #27272a; border: 1px solid var(--border); color: white; padding: 14px; border-radius: 12px; font-size: 16px; margin-bottom: 12px; font-family: inherit; }
+        .btn-save { background: var(--accent); color: black; width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 700; font-size: 16px; }
 
-        /* --- CATEGORIES GRID --- */
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .cat-card { 
-            background: var(--card); border: 1px solid var(--border); padding: 25px 5px; 
-            border-radius: 24px; text-align: center; position: relative; transition: 0.2s;
-        }
-        .cat-card:active { transform: scale(0.95); background: rgba(255,255,255,0.05); }
-        .cat-card i { font-size: 32px; display: block; margin-bottom: 10px; }
-        .cat-name { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); }
-        .cat-badge { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #000; font-size: 10px; padding: 3px 8px; border-radius: 12px; font-weight: 800; border: 3px solid #09090b; }
+        /* --- UTILS --- */
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .cat-card { background: var(--card); border: 1px solid var(--border); padding: 18px 5px; border-radius: 16px; text-align: center; position: relative; }
+        .cat-card i { font-size: 24px; display: block; margin-bottom: 6px; }
+        .cat-name { font-size: 10px; font-weight: bold; text-transform: uppercase; color: var(--muted); }
+        .cat-badge { position: absolute; top: -5px; right: -5px; background: var(--accent); color: #000; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 800; border: 2px solid var(--bg); }
 
-        .section-title { font-size: 13px; color: var(--accent); margin: 30px 0 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px; text-transform: uppercase; font-weight: 700; }
-        .date-badge { padding: 4px 8px; border-radius: 7px; font-weight: 600; font-size: 10px; background: rgba(255,255,255,0.1); }
-        .overdue { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
-        .today { background: rgba(245, 166, 35, 0.15); color: #f5a623; border: 1px solid rgba(245, 166, 35, 0.3); }
+        .section-title { font-size: 12px; color: var(--accent); margin: 25px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; font-weight: 700; letter-spacing: 1px; }
+        .date-badge { padding: 3px 6px; border-radius: 5px; font-weight: 600; font-size: 10px; background: #27272a; color: var(--muted); }
+        .overdue { color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); }
+        .today { color: #f5a623; border: 1px solid rgba(245, 166, 35, 0.3); background: rgba(245, 166, 35, 0.05); }
 
-        .filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 10px 20px; border-radius: 25px; font-size: 13px; margin-right: 10px; white-space: nowrap; font-weight: 600; }
-        .filter-btn.active { background: var(--accent); color: black; box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3); }
+        .filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 16px; border-radius: 20px; font-size: 12px; margin-right: 8px; white-space: nowrap; }
+        .filter-btn.active { background: var(--accent); color: black; font-weight: 700; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo bebas">PROHORECA <span id="header-title" style="color:#fff; opacity:0.6; margin-left:8px; font-size: 18px;">TIMELINE</span></div>
+        <div class="logo bebas">PROHORECA <span id="header-title" style="color:var(--muted); margin-left:8px; font-size: 16px;">TIMELINE</span></div>
         <div class="header-btns">
-            <div id="total-count" style="background: var(--accent); color: #000; padding: 2px 10px; border-radius: 20px; font-weight: 800; font-size: 12px;">0</div>
-            <span onclick="app.showSettings()" style="font-size: 24px; cursor: pointer;">⚙️</span>
+            <div class="global-badge" id="total-count">0</div>
+            <span onclick="app.showSettings()" style="font-size: 20px; cursor: pointer; padding: 5px; color: var(--muted);">⚙️</span>
         </div>
     </header>
 
@@ -200,39 +183,35 @@
 
     <button class="fab" onclick="ui.openModal()">+</button>
 
-    <!-- MODAL ZADATAK -->
-    <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-overlay" id="modal-overlay" onclick="if(event.target === this) ui.closeModal()">
         <div class="modal">
-            <h2 class="bebas" id="modal-heading" style="margin-bottom:25px; color:var(--accent);">ZADATAK</h2>
+            <h2 class="bebas" id="modal-heading" style="margin-bottom:20px; color:var(--accent);">Zadatak</h2>
             <input type="hidden" id="task-id">
             <input type="text" id="task-desc" placeholder="Opis zadatka...">
-            
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
                 <input type="tel" id="task-phone" placeholder="Broj telefona" style="margin-bottom:0">
-                <button onclick="app.pickContact()" style="background: var(--border); border:none; padding: 0 20px; border-radius: 14px; font-size: 22px;">👤</button>
+                <button onclick="app.pickContact()" style="background: #27272a; border:1px solid var(--border); padding: 0 15px; border-radius: 12px; font-size: 20px; color:white;">👤</button>
             </div>
-
             <select id="task-cat"></select>
-            <div style="display:flex; gap:12px;">
+            <div style="display:flex; gap:10px;">
                 <input type="date" id="task-date" style="flex:1">
                 <select id="task-priority" style="flex:1">
                     <option value="normal">Normalno</option>
                     <option value="hitno">🚨 HITNO</option>
                 </select>
             </div>
-            <button class="btn-save" onclick="app.saveTask()">SAČUVAJ ZADATAK</button>
-            <button onclick="ui.closeModal()" style="background:none; border:none; color:var(--muted); width:100%; margin-top:20px; font-weight:600;">ODUSTANI</button>
+            <button class="btn-save" onclick="app.saveTask()">SAČUVAJ</button>
+            <button onclick="ui.closeModal()" style="background:none; border:none; color:var(--muted); width:100%; margin-top:15px; font-size: 13px;">ODUSTANI</button>
         </div>
     </div>
 
-    <!-- SETTINGS MODAL -->
     <div class="modal-overlay" id="settings-overlay">
         <div class="modal">
-            <h2 class="bebas" style="margin-bottom:20px; color:var(--accent);">PODEŠAVANJA</h2>
-            <button class="btn-save" onclick="app.exportData()" style="background: var(--blue); margin-bottom: 12px; color: #fff;">📦 BACKUP (IZVEZI)</button>
-            <button class="btn-save" onclick="document.getElementById('import-file').click()" style="background: var(--green); color: #fff;">📥 IMPORT (UČITAJ)</button>
+            <h2 class="bebas" style="margin-bottom:20px; color:var(--accent);">Backup</h2>
+            <button class="btn-save" onclick="app.exportData()" style="background: #3b82f6; color: white; margin-bottom: 10px;">📦 IZVEZI (Backup)</button>
+            <button class="btn-save" onclick="document.getElementById('import-file').click()" style="background: #10b981; color: white;">📥 UČITAJ (Import)</button>
             <input type="file" id="import-file" style="display:none" onchange="app.importData(event)">
-            <button onclick="document.getElementById('settings-overlay').classList.remove('open')" style="background:none; border:none; color:var(--muted); width:100%; margin-top:25px;">ZATVORI</button>
+            <button onclick="document.getElementById('settings-overlay').classList.remove('open')" style="background:none; border:none; color:var(--muted); width:100%; margin-top:20px;">ZATVORI</button>
         </div>
     </div>
 
@@ -310,10 +289,10 @@
                 if(timelineFilter === 'danas') active = active.filter(t => t.date === today);
                 if(timelineFilter === 'hitno') active = active.filter(t => t.priority === 'hitno');
 
-                el.innerHTML = `<div style="display:flex; overflow-x:auto; margin-bottom:20px; padding-bottom:5px; scrollbar-width:none;">
-                    <div class="filter-btn ${timelineFilter==='sve'?'active':''}" onclick="app.setFilter('sve')">SVE</div>
-                    <div class="filter-btn ${timelineFilter==='danas'?'active':''}" onclick="app.setFilter('danas')">DANAS</div>
-                    <div class="filter-btn ${timelineFilter==='hitno'?'active':''}" onclick="app.setFilter('hitno')">🚨 HITNO</div>
+                el.innerHTML = `<div style="display:flex; overflow-x:auto; margin-bottom:15px; padding-bottom:5px; scrollbar-width:none;">
+                    <div class="filter-btn ${timelineFilter==='sve'?'active':''}" onclick="app.setFilter('sve')">Sve</div>
+                    <div class="filter-btn ${timelineFilter==='danas'?'active':''}" onclick="app.setFilter('danas')">Danas</div>
+                    <div class="filter-btn ${timelineFilter==='hitno'?'active':''}" onclick="app.setFilter('hitno')">🚨 Hitno</div>
                 </div>`;
 
                 const overdue = active.filter(t => t.date < today).sort((a,b) => a.date > b.date ? 1 : -1);
@@ -334,20 +313,15 @@
             },
             renderCategory(el) {
                 const catTasks = tasks.filter(t => t.cat === currentCat && !t.done && !t.deleted);
-                el.innerHTML = catTasks.length ? catTasks.map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:50px; color:var(--muted)">ČISTO!</div>';
+                el.innerHTML = catTasks.length ? catTasks.map(t => this.taskHTML(t)).join('') : '<div style="text-align:center; padding:40px; color:var(--muted)">Čisto.</div>';
             },
             renderArchive(el) {
                 const done = tasks.filter(t => t.done && !t.deleted);
                 const deleted = tasks.filter(t => t.deleted);
-                
                 let html = '';
-                if(done.length) {
-                    html += `<div class="section-title bebas">ZAVRŠENO</div>` + done.slice(-20).reverse().map(t => this.taskHTML(t)).join('');
-                }
-                if(deleted.length) {
-                    html += `<div class="section-title bebas" style="color:var(--red)">SMEĆE (RECYCLE BIN)</div>` + deleted.map(t => this.taskHTML(t, true)).join('');
-                }
-                el.innerHTML = html || '<div style="text-align:center; padding:50px; color:var(--muted)">ARHIVA JE PRAZNA.</div>';
+                if(done.length) html += `<div class="section-title bebas">ZAVRŠENO</div>` + done.slice(-20).reverse().map(t => this.taskHTML(t)).join('');
+                if(deleted.length) html += `<div class="section-title bebas" style="color:var(--red)">SMEĆE</div>` + deleted.map(t => this.taskHTML(t, true)).join('');
+                el.innerHTML = html || '<div style="text-align:center; padding:40px; color:var(--muted)">Prazno.</div>';
             },
             taskHTML(t, isTrash = false) {
                 const today = new Date().toISOString().split('T')[0];
@@ -360,16 +334,16 @@
                 return `
                     <div class="task-container" data-id="${t.id}">
                         ${!isTrash ? `
-                            <div class="swipe-action swipe-done">GOTOVO ✓</div>
-                            <div class="swipe-action swipe-delete">OBRIŠI ✕</div>
+                            <div class="swipe-action swipe-done">GOTOVO</div>
+                            <div class="swipe-action swipe-delete">OBRIŠI</div>
                         ` : ''}
-                        <div class="task-card" style="border-left-color:${CATS[t.cat].c}; opacity:${t.done || t.deleted ? 0.6 : 1}; ${t.deleted ? 'transform: none !important;' : ''}" onclick="${!t.deleted ? `ui.openModal('${t.id}')` : ''}">
+                        <div class="task-card" style="border-left-color:${CATS[t.cat].c}; opacity:${t.done || t.deleted ? 0.5 : 1}" onclick="${!t.deleted ? `ui.openModal('${t.id}')` : ''}">
                             <div class="task-info">
                                 <div class="task-desc" style="${t.done || t.deleted ? 'text-decoration:line-through' : ''}">${t.desc}</div>
                                 <div class="task-meta">
-                                    <span style="color:${CATS[t.cat].c}; font-weight:700;">${CATS[t.cat].i} ${CATS[t.cat].n}</span>
+                                    <span style="color:${CATS[t.cat].c}; font-weight:700;">${CATS[t.cat].i}</span>
                                     ${t.date ? `<span class="date-badge ${ds}">${t.date.split('-')[2]}.${t.date.split('-')[1]}. ${dayName}</span>` : ''}
-                                    ${t.priority === 'hitno' ? `<span style="color:var(--red); font-weight:bold;">🚨 HITNO</span>` : ''}
+                                    ${t.priority === 'hitno' ? `<span style="color:var(--red); font-weight:bold;">🚨</span>` : ''}
                                 </div>
                             </div>
                             <div class="contact-btns">
@@ -421,29 +395,47 @@
                     try {
                         tasks = JSON.parse(e.target.result);
                         this.sync();
+                        document.getElementById('settings-overlay').classList.remove('open');
                     } catch(err) { alert('Greška.'); }
                 };
                 reader.readAsText(e.target.files[0]);
             },
             showSettings() { document.getElementById('settings-overlay').classList.add('open'); },
             initSwipe() {
-                if (currentPage === 'archive') return; // Isključi swipe u arhivi zbog stabilnosti
+                if (currentPage === 'archive') return;
                 document.querySelectorAll('.task-container').forEach(container => {
                     const card = container.querySelector('.task-card');
+                    const doneAction = container.querySelector('.swipe-done');
+                    const delAction = container.querySelector('.swipe-delete');
                     let startX = 0, currentX = 0;
-                    container.addEventListener('touchstart', e => { startX = e.touches[0].clientX; card.style.transition = 'none'; }, {passive: true});
+
+                    container.addEventListener('touchstart', e => { 
+                        startX = e.touches[0].clientX; 
+                        card.style.transition = 'none'; 
+                    }, {passive: true});
+
                     container.addEventListener('touchmove', e => {
                         currentX = e.touches[0].clientX - startX;
-                        if (currentX > 0) { container.querySelector('.swipe-done').style.opacity = 1; container.querySelector('.swipe-delete').style.opacity = 0; }
-                        else { container.querySelector('.swipe-done').style.opacity = 0; container.querySelector('.swipe-delete').style.opacity = 1; }
+                        // Pokazuj boje samo ako je pomeraj veći od 15px (da se ne pali na običan dodir)
+                        if (Math.abs(currentX) > 15) {
+                            if (currentX > 0) { doneAction.style.opacity = 0.8; delAction.style.opacity = 0; }
+                            else { doneAction.style.opacity = 0; delAction.style.opacity = 0.8; }
+                        }
                         card.style.transform = `translateX(${currentX}px)`;
                     }, {passive: true});
+
                     container.addEventListener('touchend', () => {
                         card.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
                         const id = container.getAttribute('data-id');
-                        if (currentX > 140) app.toggleTask(id);
-                        else if (currentX < -140) app.deleteTask(id);
+                        if (currentX > 150) app.toggleTask(id);
+                        else if (currentX < -150) app.deleteTask(id);
+                        
                         card.style.transform = `translateX(0px)`;
+                        // Sakrij boje ponovo
+                        setTimeout(() => {
+                            if(doneAction) doneAction.style.opacity = 0;
+                            if(delAction) delAction.style.opacity = 0;
+                        }, 300);
                         currentX = 0;
                     });
                 });
