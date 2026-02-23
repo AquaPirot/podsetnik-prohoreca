@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PROHORECA | Professional</title>
+    <title>PROHORECA | Professional PRO</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0e0e0f">
@@ -16,7 +16,7 @@
         :root {
             --bg: #0e0e10;
             --surface: #161618;
-            --card: #1c1c1f; /* Čvrsta boja, nema više providnosti */
+            --card: #1c1c1f;
             --border: #27272a;
             --accent: #f5a623;
             --text: #f4f4f5;
@@ -56,30 +56,54 @@
 
         main { flex: 1; overflow-y: auto; padding: 15px 15px 120px; position: relative; }
 
+        /* SEARCH BAR */
+        .search-container {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 12px 15px 12px 40px;
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+        .search-input:focus { border-color: var(--accent); }
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.5;
+            font-size: 16px;
+        }
+
         /* --- TASK CONTAINER --- */
         .task-container {
             position: relative;
             margin-bottom: 10px;
             border-radius: 12px;
             overflow: hidden;
-            background: #000; /* Crna pozadina ispod kartice */
+            background: #000;
         }
 
-        /* Boje ispod koje se vide samo pri swipe-u */
         .swipe-action {
             position: absolute;
             top: 0; bottom: 0; width: 100%;
             display: flex; align-items: center;
             padding: 0 25px; font-weight: 700; font-size: 12px;
             color: white; z-index: 1;
-            opacity: 0; /* Sakriveno dok ne krene swipe */
+            opacity: 0;
             transition: opacity 0.2s;
         }
         .swipe-done { background: var(--green); justify-content: flex-start; }
         .swipe-delete { background: var(--red); justify-content: flex-end; }
 
         .task-card {
-            background: var(--card); /* Puna boja, ne providi se */
+            background: var(--card);
             padding: 16px;
             border: 1px solid var(--border);
             border-left: 4px solid #3f3f46;
@@ -107,7 +131,7 @@
         .c-tel { color: #3b82f6; }
         .c-restore { color: var(--accent); }
 
-        /* --- CHECKBOX (Small & Clean) --- */
+        /* --- CHECKBOX --- */
         .checkbox-container { width: 28px; height: 28px; flex-shrink: 0; margin-left: 4px; }
         input[type="checkbox"] {
             all: unset !important; width: 24px !important; height: 24px !important;
@@ -141,7 +165,7 @@
         input:not([type="checkbox"]), select, textarea { width: 100%; background: #27272a; border: 1px solid var(--border); color: white; padding: 14px; border-radius: 12px; font-size: 16px; margin-bottom: 12px; font-family: inherit; }
         .btn-save { background: var(--accent); color: black; width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 700; font-size: 16px; }
 
-        /* --- UTILS --- */
+        /* --- GRID --- */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .cat-card { background: var(--card); border: 1px solid var(--border); padding: 18px 5px; border-radius: 16px; text-align: center; position: relative; }
         .cat-card i { font-size: 24px; display: block; margin-bottom: 6px; }
@@ -220,6 +244,8 @@
             upiti: { n: 'Upiti & Ponude', i: '📧', c: '#3498db' },
             projekti: { n: 'Projekti & Montaža', i: '🏗️', c: '#e67e22' },
             obilazak: { n: 'Obilazak', i: '🚗', c: '#2ecc71' },
+            proizvodnja: { n: 'Proizvodnja', i: '⚙️', c: '#95a5a6' }, // DODATO
+            marketing: { n: 'Marketing', i: '📢', c: '#1abc9c' }, // DODATO
             aqua: { n: 'Aqua', i: '💧', c: '#00cec9' },
             pv: { n: 'PV', i: '☀️', c: '#fdcb6e' },
             finansije: { n: 'Finansije', i: '💰', c: '#f1c40f' },
@@ -233,6 +259,7 @@
         let currentPage = 'timeline';
         let currentCat = null;
         let timelineFilter = 'sve';
+        let searchQuery = ""; // Za pretragu
 
         const app = {
             setPage(page, cat = null) {
@@ -286,14 +313,27 @@
             renderTimeline(el) {
                 const today = new Date().toISOString().split('T')[0];
                 let active = tasks.filter(t => !t.done && t.date && !t.deleted);
+                
+                // Primeni pretragu ako postoji
+                if(searchQuery) {
+                    active = active.filter(t => t.desc.toLowerCase().includes(searchQuery.toLowerCase()));
+                }
+
                 if(timelineFilter === 'danas') active = active.filter(t => t.date === today);
                 if(timelineFilter === 'hitno') active = active.filter(t => t.priority === 'hitno');
 
-                el.innerHTML = `<div style="display:flex; overflow-x:auto; margin-bottom:15px; padding-bottom:5px; scrollbar-width:none;">
-                    <div class="filter-btn ${timelineFilter==='sve'?'active':''}" onclick="app.setFilter('sve')">Sve</div>
-                    <div class="filter-btn ${timelineFilter==='danas'?'active':''}" onclick="app.setFilter('danas')">Danas</div>
-                    <div class="filter-btn ${timelineFilter==='hitno'?'active':''}" onclick="app.setFilter('hitno')">🚨 Hitno</div>
-                </div>`;
+                // SEARCH BAR HTML
+                el.innerHTML = `
+                    <div class="search-container">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" placeholder="Pretraži klijenta ili zadatak..." value="${searchQuery}" oninput="app.handleSearch(this.value)">
+                    </div>
+                    <div style="display:flex; overflow-x:auto; margin-bottom:15px; padding-bottom:5px; scrollbar-width:none;">
+                        <div class="filter-btn ${timelineFilter==='sve'?'active':''}" onclick="app.setFilter('sve')">Sve</div>
+                        <div class="filter-btn ${timelineFilter==='danas'?'active':''}" onclick="app.setFilter('danas')">Danas</div>
+                        <div class="filter-btn ${timelineFilter==='hitno'?'active':''}" onclick="app.setFilter('hitno')">🚨 Hitno</div>
+                    </div>
+                `;
 
                 const overdue = active.filter(t => t.date < today).sort((a,b) => a.date > b.date ? 1 : -1);
                 const isToday = active.filter(t => t.date === today);
@@ -302,6 +342,12 @@
                 if (overdue.length) el.innerHTML += `<div class="section-title bebas">ISTEKLO</div>` + overdue.map(t => this.taskHTML(t)).join('');
                 if (isToday.length) el.innerHTML += `<div class="section-title bebas">DANAS</div>` + isToday.map(t => this.taskHTML(t)).join('');
                 if (upcoming.length) el.innerHTML += `<div class="section-title bebas">USKORO</div>` + upcoming.map(t => this.taskHTML(t)).join('');
+                
+                if (!active.length && searchQuery) el.innerHTML += `<div style="text-align:center; padding:40px; color:var(--muted)">Nema rezultata za "${searchQuery}"</div>`;
+            },
+            handleSearch(val) {
+                searchQuery = val;
+                this.render();
             },
             renderGrid(el) {
                 let html = '<div class="grid">';
@@ -416,7 +462,6 @@
 
                     container.addEventListener('touchmove', e => {
                         currentX = e.touches[0].clientX - startX;
-                        // Pokazuj boje samo ako je pomeraj veći od 15px (da se ne pali na običan dodir)
                         if (Math.abs(currentX) > 15) {
                             if (currentX > 0) { doneAction.style.opacity = 0.8; delAction.style.opacity = 0; }
                             else { doneAction.style.opacity = 0; delAction.style.opacity = 0.8; }
@@ -431,7 +476,6 @@
                         else if (currentX < -150) app.deleteTask(id);
                         
                         card.style.transform = `translateX(0px)`;
-                        // Sakrij boje ponovo
                         setTimeout(() => {
                             if(doneAction) doneAction.style.opacity = 0;
                             if(delAction) delAction.style.opacity = 0;
