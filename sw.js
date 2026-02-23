@@ -1,6 +1,6 @@
 // Service Worker — Podsetnik PROHORECA
 // Verzija cache-a — promeni kad update-uješ app
-const CACHE_NAME = 'podsetnik-v8';
+const CACHE_NAME = 'podsetnik-v9';
 
 const ASSETS = [
   './',
